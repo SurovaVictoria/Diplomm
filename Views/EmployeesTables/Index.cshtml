@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Diplomm.Models.Tables.EmployeesTable>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Список сотрудников</h1>
+
+<p>
+    <a asp-action="Create">Добавить сотрудника</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Имя")
+            </th>
+            <th>
+                @Html.DisplayName("Фамилия")
+            </th>
+            <th>
+                @Html.DisplayName("Отчество")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Patronymic)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EmployeesId">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.EmployeesId">Просмотр</a> |
+                <a asp-action="Delete" asp-route-id="@item.EmployeesId">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Diplomm.Models.Tables.TimetableTable>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Расписание</h1>
+
+<p>
+    <a asp-action="Create">Добавить урок</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("День недели")
+            </th>
+            <th>
+                @Html.DisplayName("№")
+            </th>
+            <th>
+                @Html.DisplayName("Дисциплина")
+            </th>
+            <th>
+                @Html.DisplayName("Группа")
+            </th>
+            <th>
+                @Html.DisplayName("Преподаватель")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DayOfWeek)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject.SubjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Group.GroupName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.FullName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TimetableID">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.TimetableID">Просмотр</a> |
+                <a asp-action="Delete" asp-route-id="@item.TimetableID">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
