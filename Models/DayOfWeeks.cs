@@ -5,6 +5,9 @@ namespace Diplomm.Models
 {
     public enum DayOfWeeks
     {
+        /// <summary>
+        /// Понедельник
+        /// </summary>
         [Display(Name = "Понедельник")]
         Monday = DayOfWeek.Monday,
         [Display(Name = "Вторник")]
