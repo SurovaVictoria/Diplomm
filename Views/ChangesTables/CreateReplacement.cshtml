@@ -24,7 +24,7 @@
             </div> *@
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Replacement" checked="true" /> @Html.DisplayNameFor(model => model.Replacement)
+                    <input class="form-check-input" asp-for="Replacement" checked="true" /> Замена
                 </label>
             </div>
             <div class="form-group">
@@ -33,7 +33,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="fkEmployee" class="control-label"></label>
-                <select asp-for="fkEmployee" class ="form-control" asp-items="ViewBag.fkEmployee"></select>
+                <select asp-for="fkEmployee" class ="form-control" asp-items="ViewBag.fkEmployee">Кто заменяет</select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
