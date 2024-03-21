@@ -5,19 +5,33 @@ namespace Diplomm.Models
 {
     public enum DayOfWeeks
     {
-        [Display(Name = "Понедельник")]
-        Monday = DayOfWeek.Monday,
-        [Display(Name = "Вторник")]
-        Tuesday = DayOfWeek.Tuesday,
-        [Display(Name = "Среда")]
-        Wednesday = DayOfWeek.Wednesday,
-        [Display(Name = "Четверг")]
-        Thursday = DayOfWeek.Thursday,
-        [Display(Name = "Пятница")]
-        Friday = DayOfWeek.Friday,
-        [Display(Name = "Суббота")]
-        Saturday = DayOfWeek.Saturday,
-        [Display(Name = "Воскресенье")]
-        Sunday = DayOfWeek.Sunday
+        /// <summary>
+        /// Понедельник
+        /// </summary>
+        [Display(Name = "Понедельник")] Monday,
+        /// <summary>
+        /// Вторник
+        /// </summary>
+        [Display(Name = "Вторник")] Tuesday,
+        /// <summary>
+        /// Среда
+        /// </summary>
+        [Display(Name = "Среда")] Wednesday,
+        /// <summary>
+        /// Четверг
+        /// </summary>
+        [Display(Name = "Четверг")] Thursday,
+        /// <summary>
+        /// Пятница
+        /// </summary>
+        [Display(Name = "Пятница")] Friday,
+        /// <summary>
+        /// Суббота
+        /// </summary>
+        [Display(Name = "Суббота")] Saturday
+        /// <summary>
+        /// Воскресенье
+        /// </summary>
+        //[Display(Name = "Воскресенье")] Sunday
     }
 }

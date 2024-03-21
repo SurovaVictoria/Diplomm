@@ -22,9 +22,10 @@ namespace Diplomm.Data
         public DbSet<Groups> Groups => Set<Groups>();
         public DbSet<Subjects> Subjects => Set<Subjects>();
         public DbSet<ReportTable> ReportTables => Set<ReportTable>();
+        public DbSet<ChangesTable> ChangesTables => Set<ChangesTable>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=LAPTOP-MPE0H8CI\\SQLEXPRESS;Initial Catalog=dom;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
+            optionsBuilder.UseSqlServer("Data Source=LAPTOP-MPE0H8CI\\SQLEXPRESS;Initial Catalog=bim;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
         }
     }
 

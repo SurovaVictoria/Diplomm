@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Diplomm.Data;
 using Diplomm.Models.Tables;
+using Diplomm.Models;
 
 namespace Diplomm.Controllers
 {
@@ -48,13 +49,21 @@ namespace Diplomm.Controllers
         }
 
         // GET: TimetableTables/Create
-        public IActionResult Create()
+        public IActionResult Create(DayOfWeeks? dayOfWeek, int? idGroup)
         {
+            var currentDayItems = _context.TimetableTables.Where(t => t.DayOfWeek == dayOfWeek && t.fkGroups == idGroup);
+            int currentMaxNumber = 0;
+            if (currentDayItems.Count() > 0)
+            {
+                currentMaxNumber = currentDayItems.Max(m => m.Number);
+            }
+            ViewBag.NextNum = currentMaxNumber + 1;
             ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName");
-            ViewData["fkGroups"] = new SelectList(_context.Groups, "GroupId", "GroupName");
+            ViewData["fkGroups"] = new SelectList(_context.Groups, "GroupId", "GroupName", idGroup);
             ViewData["fkSubjects"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName");
             return View();
         }
+
 
         // POST: TimetableTables/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

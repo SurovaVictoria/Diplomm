@@ -263,6 +263,33 @@ namespace Diplomm.Migrations
                         principalColumn: "SubjectId");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ChangesTables",
+                columns: table => new
+                {
+                    ChangeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateChange = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Cancel = table.Column<bool>(type: "bit", nullable: false),
+                    Replacement = table.Column<bool>(type: "bit", nullable: false),
+                    fkTimetable = table.Column<int>(type: "int", nullable: true),
+                    fkEmployee = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChangesTables", x => x.ChangeId);
+                    table.ForeignKey(
+                        name: "FK_ChangesTables_EmployeesTables_fkEmployee",
+                        column: x => x.fkEmployee,
+                        principalTable: "EmployeesTables",
+                        principalColumn: "EmployeesId");
+                    table.ForeignKey(
+                        name: "FK_ChangesTables_TimetableTables_fkTimetable",
+                        column: x => x.fkTimetable,
+                        principalTable: "TimetableTables",
+                        principalColumn: "TimetableID");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -301,6 +328,16 @@ namespace Diplomm.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChangesTables_fkEmployee",
+                table: "ChangesTables",
+                column: "fkEmployee");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChangesTables_fkTimetable",
+                table: "ChangesTables",
+                column: "fkTimetable");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReportTables_fkGroup",
@@ -352,16 +389,19 @@ namespace Diplomm.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ReportTables");
+                name: "ChangesTables");
 
             migrationBuilder.DropTable(
-                name: "TimetableTables");
+                name: "ReportTables");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "TimetableTables");
 
             migrationBuilder.DropTable(
                 name: "EmployeesTables");
