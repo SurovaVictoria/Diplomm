@@ -25,7 +25,7 @@ namespace Diplomm.Data
         public DbSet<ChangesTable> ChangesTables => Set<ChangesTable>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=LAPTOP-MPE0H8CI\\SQLEXPRESS;Initial Catalog=bim;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
+            optionsBuilder.UseSqlServer("Server=localhost;Database=bim;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=true");
         }
     }
 

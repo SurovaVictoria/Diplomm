@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Diplomm.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240321051320_Init")]
+    [Migration("20240321054821_Init")]
     partial class Init
     {
         /// <inheritdoc />
