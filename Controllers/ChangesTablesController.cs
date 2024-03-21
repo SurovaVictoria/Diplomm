@@ -71,7 +71,7 @@ namespace Diplomm.Controllers
         {
             var cancelItem = _context.ChangesTables.Where(c => c.fkTimetable == idTimetable && c.fkEmployee == idEmployee);
 
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "EmployeesId", idEmployee);
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", idEmployee);
             ViewData["fkTimetable"] = new SelectList(_context.TimetableTables, "TimetableID", "TimetableID", idTimetable);
             return View();
         }
@@ -89,7 +89,7 @@ namespace Diplomm.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
             }
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "EmployeesId", changesTable.fkEmployee);
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", changesTable.fkEmployee);
             ViewData["fkTimetable"] = new SelectList(_context.TimetableTables, "TimetableID", "TimetableID", changesTable.fkTimetable);
             return View(changesTable);
         }
@@ -99,7 +99,7 @@ namespace Diplomm.Controllers
         {
             var cancelItem = _context.ChangesTables.Where(c => c.fkTimetable == idTimetable && c.fkEmployee == idEmployee);
 
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "EmployeesId", idEmployee);
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", idEmployee);
             ViewData["fkTimetable"] = new SelectList(_context.TimetableTables, "TimetableID", "TimetableID", idTimetable);
             return View();
         }
@@ -117,7 +117,7 @@ namespace Diplomm.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
             }
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "EmployeesId", changesTable.fkEmployee);
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", changesTable.fkEmployee);
             ViewData["fkTimetable"] = new SelectList(_context.TimetableTables, "TimetableID", "TimetableID", changesTable.fkTimetable);
             return View(changesTable);
         }
