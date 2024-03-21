@@ -273,6 +273,7 @@ namespace Diplomm.Migrations
                     Cancel = table.Column<bool>(type: "bit", nullable: false),
                     Replacement = table.Column<bool>(type: "bit", nullable: false),
                     fkTimetable = table.Column<int>(type: "int", nullable: true),
+                    fkSubject = table.Column<int>(type: "int", nullable: true),
                     fkEmployee = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -283,6 +284,11 @@ namespace Diplomm.Migrations
                         column: x => x.fkEmployee,
                         principalTable: "EmployeesTables",
                         principalColumn: "EmployeesId");
+                    table.ForeignKey(
+                        name: "FK_ChangesTables_Subjects_fkSubject",
+                        column: x => x.fkSubject,
+                        principalTable: "Subjects",
+                        principalColumn: "SubjectId");
                     table.ForeignKey(
                         name: "FK_ChangesTables_TimetableTables_fkTimetable",
                         column: x => x.fkTimetable,
@@ -333,6 +339,11 @@ namespace Diplomm.Migrations
                 name: "IX_ChangesTables_fkEmployee",
                 table: "ChangesTables",
                 column: "fkEmployee");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChangesTables_fkSubject",
+                table: "ChangesTables",
+                column: "fkSubject");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChangesTables_fkTimetable",

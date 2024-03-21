@@ -1,7 +1,9 @@
-﻿@model Diplomm.Models.Tables.ChangesTable
+﻿@using Diplomm.Models.Tables;
+@model Diplomm.Models.Tables.ChangesTable
 
 @{
     ViewData["Title"] = "Create";
+    TimetableTable timetable = ViewBag.Timetable;
 }
 
 <h1>Create</h1>
@@ -10,31 +12,42 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" asp-route-chancheAction="@(ViewBag.chancheAction)">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="fkTimetable" value="@(timetable.TimetableID)" />
+
+            <div>
+                <h3>Корректируемый предмет</h3>
+                <div><b>@(timetable.GetName)</b></div>
+            </div>
+            <hr />
             <div class="form-group">
                 <label asp-for="DateChange" class="control-label"></label>
-                <input asp-for="DateChange" class="form-control" />
+                <input asp-for="DateChange" type="date" class="form-control" value="@(ViewBag.DateSelect)" />
                 <span asp-validation-for="DateChange" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Cancel" /> @Html.DisplayNameFor(model => model.Cancel)
-                </label>
-            </div>
-            @* <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Replacement" /> @Html.DisplayNameFor(model => model.Replacement)
-                </label>
-            </div> *@
-            <div class="form-group">
-                <label asp-for="fkTimetable" class="control-label"></label>
-                <select asp-for="fkTimetable" class ="form-control" asp-items="ViewBag.fkTimetable"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="fkEmployee" class="control-label"></label>
-                <select asp-for="fkEmployee" class ="form-control" asp-items="ViewBag.fkEmployee"></select>
-            </div>
+
+            @if (ViewBag.chancheAction == ChancheActions.Replace)
+            {
+                <h3>Замена на ...</h3>
+                <input type="hidden" asp-for="Replacement" value="true" />
+                <input type="hidden" asp-for="Cancel" value="false" />
+                <div class="form-group">
+                    <label asp-for="fkSubject" class="control-label"></label>
+                    <select asp-for="fkSubject" class="form-control" asp-items="ViewBag.fkSubject"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="fkEmployee" class="control-label"></label>
+                    <select asp-for="fkEmployee" class="form-control" asp-items="ViewBag.fkEmployee"></select>
+                </div>
+            }
+            else
+            {
+                <h3>Отмена занятия</h3>
+                <input type="hidden" asp-for="Replacement" value="false" />
+                <input type="hidden" asp-for="Cancel" value="true" />
+            }
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Diplomm.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240321054821_Init")]
+    [Migration("20240321073809_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -77,12 +77,17 @@ namespace Diplomm.Migrations
                     b.Property<int?>("fkEmployee")
                         .HasColumnType("int");
 
+                    b.Property<int?>("fkSubject")
+                        .HasColumnType("int");
+
                     b.Property<int?>("fkTimetable")
                         .HasColumnType("int");
 
                     b.HasKey("ChangeId");
 
                     b.HasIndex("fkEmployee");
+
+                    b.HasIndex("fkSubject");
 
                     b.HasIndex("fkTimetable");
 
@@ -391,11 +396,17 @@ namespace Diplomm.Migrations
                         .WithMany()
                         .HasForeignKey("fkEmployee");
 
+                    b.HasOne("Diplomm.Models.Subjects", "Subjects")
+                        .WithMany()
+                        .HasForeignKey("fkSubject");
+
                     b.HasOne("Diplomm.Models.Tables.TimetableTable", "Timetable")
                         .WithMany()
                         .HasForeignKey("fkTimetable");
 
                     b.Navigation("Employees");
+
+                    b.Navigation("Subjects");
 
                     b.Navigation("Timetable");
                 });

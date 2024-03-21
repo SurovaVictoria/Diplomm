@@ -8,7 +8,7 @@ namespace Diplomm.Models
         /// <summary>
         /// Понедельник
         /// </summary>
-        [Display(Name = "Понедельник")] Monday,
+        [Display(Name = "Понедельник")] Monday = 1, // Установил Поненельник 1, чтоб соответствовало значениям библиотеки System.DayOfWeek
         /// <summary>
         /// Вторник
         /// </summary>

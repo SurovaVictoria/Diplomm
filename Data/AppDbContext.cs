@@ -10,8 +10,9 @@ namespace Diplomm.Data
     {
         public AppDbContext()
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
+            // Не нужно удалять и создавать БД
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
         }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
         {
@@ -25,7 +26,7 @@ namespace Diplomm.Data
         public DbSet<ChangesTable> ChangesTables => Set<ChangesTable>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost;Database=bim;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Server=localhost\\sqlexpress;Database=bim;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=true");
         }
     }
 

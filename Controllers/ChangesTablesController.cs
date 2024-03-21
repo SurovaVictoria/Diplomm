@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Diplomm.Data;
 using Diplomm.Models.Tables;
+using Diplomm.Models;
 
 namespace Diplomm.Controllers
 {
@@ -67,12 +68,29 @@ namespace Diplomm.Controllers
         }
 
         // GET: ChangesTables/Create
-        public IActionResult Create(int? idTimetable, int? idEmployee)
+        public IActionResult Create(int idTimetable, ChancheActions chancheAction = ChancheActions.Replace)
         {
-            var cancelItem = _context.ChangesTables.Where(c => c.fkTimetable == idTimetable && c.fkEmployee == idEmployee);
+            // Не имеет смысла Ты создаешь объект и он никуда не применяется
+            //var cancelItem = _context.ChangesTables.Where(c => c.fkTimetable == idTimetable && c.fkEmployee == idEmployee);
 
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "EmployeesId", idEmployee);
-            ViewData["fkTimetable"] = new SelectList(_context.TimetableTables, "TimetableID", "TimetableID", idTimetable);
+            // Нам не надо выбирать предмет, который мы меняем, мы уже его выбрали из расписания нажав на кнопку
+            //ViewData["fkTimetable"] = new SelectList(_context.TimetableTables.Include(s => s.Subject), "TimetableID", "GetName", idTimetable);
+            var timetables = _context.TimetableTables
+                .Where(it => it.TimetableID == idTimetable)
+                .Include(s => s.Subject).FirstOrDefault();
+            ViewBag.Timetable = timetables;
+
+            // Для простоты ввода данных по умолчанию выбирается дата текущей недели
+            // Вычисляем разницу в днях между сегодня и выбранной датой
+            var deltaDaysOfWeekToSelect = ((int)timetables.DayOfWeek) - ((int)DateTime.Now.DayOfWeek);
+            // Формируем дату выбранного дня недели
+            DateTime dateSelect = DateTime.Now.AddDays(deltaDaysOfWeekToSelect);
+            ViewBag.DateSelect = dateSelect.ToString("yyyy-MM-dd");
+
+            ViewBag.chancheAction = chancheAction;
+
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "Name");
+            ViewData["fkSubject"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName");
             return View();
         }
 
@@ -81,7 +99,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ChangeId,DateChange,Cancel,Replacement,fkTimetable,fkEmployee")] ChangesTable changesTable)
+        public async Task<IActionResult> Create([Bind("ChangeId,DateChange,Cancel,Replacement,fkTimetable,fkEmployee,fkSubject")] ChangesTable changesTable, ChancheActions chancheAction)
         {
             if (ModelState.IsValid)
             {
@@ -89,38 +107,53 @@ namespace Diplomm.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
             }
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "EmployeesId", changesTable.fkEmployee);
-            ViewData["fkTimetable"] = new SelectList(_context.TimetableTables, "TimetableID", "TimetableID", changesTable.fkTimetable);
+            var timetables = _context.TimetableTables
+                .Where(it => it.TimetableID == changesTable.fkTimetable)
+                .Include(s => s.Subject).FirstOrDefault();
+            ViewBag.Timetable = timetables;
+            var deltaDaysOfWeekToSelect = ((int)timetables.DayOfWeek) - ((int)DateTime.Now.DayOfWeek);
+            DateTime dateSelect = DateTime.Now.AddDays(deltaDaysOfWeekToSelect);
+            ViewBag.DateSelect = dateSelect.ToString("yyyy-MM-dd");
+            ViewBag.chancheAction = chancheAction;
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "Name", changesTable.fkEmployee);
+            ViewData["fkSubject"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName");
             return View(changesTable);
         }
 
-        // GET: ChangesTables/Create
-        public IActionResult CreateReplacement(int? idTimetable, int? idEmployee)
-        {
-            var cancelItem = _context.ChangesTables.Where(c => c.fkTimetable == idTimetable && c.fkEmployee == idEmployee);
+        /*
+         * Достаточно Одного метода Create.
+         * Если хочешь менять при этом представление, то примени логику в самом представлении.
+         * (Добавим еще один параметр Action который будет содержать название операции, Замена или Отмена)
+         * Не нужно плодить одинаковые файлы, отличающиеся несколькими строчками
+         */
 
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "EmployeesId", idEmployee);
-            ViewData["fkTimetable"] = new SelectList(_context.TimetableTables, "TimetableID", "TimetableID", idTimetable);
-            return View();
-        }
+        //// GET: ChangesTables/Create
+        //public IActionResult CreateReplacement(int? idTimetable, int? idEmployee)
+        //{
+        //    var cancelItem = _context.ChangesTables.Where(c => c.fkTimetable == idTimetable && c.fkEmployee == idEmployee);
 
-        // POST: ChangesTables/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateReplacement([Bind("ChangeId,DateChange,Cancel,Replacement,fkTimetable,fkEmployee")] ChangesTable changesTable)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(changesTable);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Home");
-            }
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "EmployeesId", changesTable.fkEmployee);
-            ViewData["fkTimetable"] = new SelectList(_context.TimetableTables, "TimetableID", "TimetableID", changesTable.fkTimetable);
-            return View(changesTable);
-        }
+        //    ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "Name", idEmployee);
+        //    ViewData["fkTimetable"] = new SelectList(_context.TimetableTables.Include(s => s.Subject), "TimetableID", "GetName", idTimetable);
+        //    return View();
+        //}
+
+        //// POST: ChangesTables/Create
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CreateReplacement([Bind("ChangeId,DateChange,Cancel,Replacement,fkTimetable,fkEmployee")] ChangesTable changesTable)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(changesTable);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //    ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "Name", changesTable.fkEmployee);
+        //    ViewData["fkTimetable"] = new SelectList(_context.TimetableTables.Include(s => s.Subject), "TimetableID", "GetName", changesTable.fkTimetable);
+        //    return View(changesTable);
+        //}
 
         // GET: ChangesTables/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -135,8 +168,8 @@ namespace Diplomm.Controllers
             {
                 return NotFound();
             }
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "EmployeesId", changesTable.fkEmployee);
-            ViewData["fkTimetable"] = new SelectList(_context.TimetableTables, "TimetableID", "TimetableID", changesTable.fkTimetable);
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "Name", changesTable.fkEmployee);
+            ViewData["fkTimetable"] = new SelectList(_context.TimetableTables.Include(s => s.Subject), "TimetableID", "GetName", changesTable.fkTimetable);
             return View(changesTable);
         }
 
@@ -145,7 +178,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ChangeId,DateChange,Cancel,Replacement,fkTimetable,fkEmployee")] ChangesTable changesTable)
+        public async Task<IActionResult> Edit(int id, [Bind("ChangeId,DateChange,Cancel,Replacement,fkTimetable,fkEmployee,fkSubject")] ChangesTable changesTable)
         {
             if (id != changesTable.ChangeId)
             {
