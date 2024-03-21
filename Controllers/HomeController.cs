@@ -1,23 +1,53 @@
+using Diplomm.Data;
 using Diplomm.Models;
+using Diplomm.Models.Tables;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Diplomm.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly AppDbContext _context;
+        public HomeController(AppDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            // Получаем текущее рассписние
+            List<TimetableTable> timeTableByGroup = await _context.TimetableTables
+                .Include(t => t.Employee)
+                .Include(t => t.Group)
+                .Include(t => t.Subject)
+                .ToListAsync();
+
+            // Получить период дат текущей недели
+
+            var deltaDaysOfWeekToMonday = DayOfWeek.Monday - DateTime.Now.DayOfWeek;
+            DateTime dateMonday = DateTime.Now.AddDays(deltaDaysOfWeekToMonday);
+            DateTime dateSaturday = dateMonday.AddDays(5);
+            // Получаем изменения текущей недели
+            //var changeTimetable = _context.ChangesTables.Include();
+
+            // Привести текущее рассписание в актуальный вид
+            // foreach(var change in changeTimetable) { }
+            //int idTimeTable = 0;
+            //var changeItem = timeTableByGroup.Where(it => it.TimetableID == idTimeTable).FirstOrDefault();
+            //if(changeItem != null)
+            //{
+            //    changeItem.fkEmployees = 0;
+            //    //changeItem.Description = "";
+            //}
+
+            //
+            return View(timeTableByGroup.GroupBy(s => s.Group).ToList());
         }
+
 
         public IActionResult Privacy()
         {

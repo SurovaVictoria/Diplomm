@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Diplomm.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231214090223_Init")]
+    [Migration("20240321051320_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Diplomm.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -55,6 +55,38 @@ namespace Diplomm.Migrations
                     b.HasKey("SubjectId");
 
                     b.ToTable("Subjects");
+                });
+
+            modelBuilder.Entity("Diplomm.Models.Tables.ChangesTable", b =>
+                {
+                    b.Property<int>("ChangeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChangeId"));
+
+                    b.Property<bool>("Cancel")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("DateChange")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Replacement")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("fkEmployee")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("fkTimetable")
+                        .HasColumnType("int");
+
+                    b.HasKey("ChangeId");
+
+                    b.HasIndex("fkEmployee");
+
+                    b.HasIndex("fkTimetable");
+
+                    b.ToTable("ChangesTables");
                 });
 
             modelBuilder.Entity("Diplomm.Models.Tables.EmployeesTable", b =>
@@ -351,6 +383,21 @@ namespace Diplomm.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Diplomm.Models.Tables.ChangesTable", b =>
+                {
+                    b.HasOne("Diplomm.Models.Tables.EmployeesTable", "Employees")
+                        .WithMany()
+                        .HasForeignKey("fkEmployee");
+
+                    b.HasOne("Diplomm.Models.Tables.TimetableTable", "Timetable")
+                        .WithMany()
+                        .HasForeignKey("fkTimetable");
+
+                    b.Navigation("Employees");
+
+                    b.Navigation("Timetable");
                 });
 
             modelBuilder.Entity("Diplomm.Models.Tables.ReportTable", b =>

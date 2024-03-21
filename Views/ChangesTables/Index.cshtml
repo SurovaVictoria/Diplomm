@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Diplomm.Models.Tables.ChangesTable>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Отчет</h1>
+<form id="dateForm" method="GET" class="form-group">
+    <div class="row justify-content-center">
+        <div class="col-md-auto">
+            <label>От:</label>
+            <input id="fromDate" type="date" name="FromDate" class="form-control" required />
+        </div>
+        <div class="col-md-auto">
+            <label>До:</label>
+            <input id="toDate" type="date" name="ToDate" class="form-control" required />
+        </div>
+        @* <div class="col-md-auto">
+            <label class="control-label">Сотрудник: </label>
+            <input id="employee" type="search" asp-items="ViewBag.fkReplacement" name="Employee" class="form-control" required />
+        </div> *@
+        <div class="col-md-auto">
+            <button class="btn btn-primary btn-sm" type="submit">Отчет</button>
+        </div>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DateChange)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cancel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Replacement)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Timetable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employees)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateChange)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cancel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Replacement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timetable.TimetableID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employees.EmployeesId)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
