@@ -29,12 +29,12 @@ namespace Diplomm.Models.Tables
         /// <summary>
         /// На что меняем
         /// </summary>
-        public int? fkSubject {  get; set; }
+        public int? fkPost {  get; set; }
         /// <summary>
         /// На что меняем
         /// </summary>
-        [ForeignKey(nameof(fkSubject))]
-        public Subjects? Subjects { get; set; }
+        [ForeignKey(nameof(fkPost))]
+        public Post? Posts { get; set; }
         /// <summary>
         /// Преподаватель
         /// </summary>

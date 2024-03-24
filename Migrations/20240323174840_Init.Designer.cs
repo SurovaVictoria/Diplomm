@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Diplomm.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240321073809_Init")]
+    [Migration("20240323174840_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -25,36 +25,20 @@ namespace Diplomm.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Diplomm.Models.Groups", b =>
+            modelBuilder.Entity("Diplomm.Models.Post", b =>
                 {
-                    b.Property<int>("GroupId")
+                    b.Property<int>("PostId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PostId"));
 
-                    b.Property<string>("GroupName")
+                    b.Property<string>("PostName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("GroupId");
+                    b.HasKey("PostId");
 
-                    b.ToTable("Groups");
-                });
-
-            modelBuilder.Entity("Diplomm.Models.Subjects", b =>
-                {
-                    b.Property<int>("SubjectId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubjectId"));
-
-                    b.Property<string>("SubjectName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("SubjectId");
-
-                    b.ToTable("Subjects");
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Diplomm.Models.Tables.ChangesTable", b =>
@@ -77,7 +61,7 @@ namespace Diplomm.Migrations
                     b.Property<int?>("fkEmployee")
                         .HasColumnType("int");
 
-                    b.Property<int?>("fkSubject")
+                    b.Property<int?>("fkPost")
                         .HasColumnType("int");
 
                     b.Property<int?>("fkTimetable")
@@ -87,7 +71,7 @@ namespace Diplomm.Migrations
 
                     b.HasIndex("fkEmployee");
 
-                    b.HasIndex("fkSubject");
+                    b.HasIndex("fkPost");
 
                     b.HasIndex("fkTimetable");
 
@@ -114,48 +98,33 @@ namespace Diplomm.Migrations
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("fkPost")
+                        .HasColumnType("int");
+
                     b.HasKey("EmployeesId");
+
+                    b.HasIndex("fkPost");
 
                     b.ToTable("EmployeesTables");
                 });
 
-            modelBuilder.Entity("Diplomm.Models.Tables.ReportTable", b =>
+            modelBuilder.Entity("Diplomm.Models.Tables.OrganizationTable", b =>
                 {
-                    b.Property<int>("ReportId")
+                    b.Property<int>("ShopId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShopId"));
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Employee")
-                        .IsRequired()
+                    b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
+                    b.Property<string>("ShopName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("fkGroup")
-                        .HasColumnType("int");
+                    b.HasKey("ShopId");
 
-                    b.Property<int?>("fkLesson")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("fkReplacement")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReportId");
-
-                    b.HasIndex("fkGroup");
-
-                    b.HasIndex("fkLesson");
-
-                    b.HasIndex("fkReplacement");
-
-                    b.ToTable("ReportTables");
+                    b.ToTable("OrganizationTables");
                 });
 
             modelBuilder.Entity("Diplomm.Models.Tables.TimetableTable", b =>
@@ -175,19 +144,19 @@ namespace Diplomm.Migrations
                     b.Property<int?>("fkEmployees")
                         .HasColumnType("int");
 
-                    b.Property<int?>("fkGroups")
+                    b.Property<int?>("fkOrganizations")
                         .HasColumnType("int");
 
-                    b.Property<int?>("fkSubjects")
+                    b.Property<int?>("fkPosts")
                         .HasColumnType("int");
 
                     b.HasKey("TimetableID");
 
                     b.HasIndex("fkEmployees");
 
-                    b.HasIndex("fkGroups");
+                    b.HasIndex("fkOrganizations");
 
-                    b.HasIndex("fkSubjects");
+                    b.HasIndex("fkPosts");
 
                     b.ToTable("TimetableTables");
                 });
@@ -396,9 +365,9 @@ namespace Diplomm.Migrations
                         .WithMany()
                         .HasForeignKey("fkEmployee");
 
-                    b.HasOne("Diplomm.Models.Subjects", "Subjects")
+                    b.HasOne("Diplomm.Models.Post", "Posts")
                         .WithMany()
-                        .HasForeignKey("fkSubject");
+                        .HasForeignKey("fkPost");
 
                     b.HasOne("Diplomm.Models.Tables.TimetableTable", "Timetable")
                         .WithMany()
@@ -406,30 +375,18 @@ namespace Diplomm.Migrations
 
                     b.Navigation("Employees");
 
-                    b.Navigation("Subjects");
+                    b.Navigation("Posts");
 
                     b.Navigation("Timetable");
                 });
 
-            modelBuilder.Entity("Diplomm.Models.Tables.ReportTable", b =>
+            modelBuilder.Entity("Diplomm.Models.Tables.EmployeesTable", b =>
                 {
-                    b.HasOne("Diplomm.Models.Groups", "Group")
+                    b.HasOne("Diplomm.Models.Post", "Posts")
                         .WithMany()
-                        .HasForeignKey("fkGroup");
+                        .HasForeignKey("fkPost");
 
-                    b.HasOne("Diplomm.Models.Subjects", "Lesson")
-                        .WithMany()
-                        .HasForeignKey("fkLesson");
-
-                    b.HasOne("Diplomm.Models.Tables.EmployeesTable", "Replacement")
-                        .WithMany()
-                        .HasForeignKey("fkReplacement");
-
-                    b.Navigation("Group");
-
-                    b.Navigation("Lesson");
-
-                    b.Navigation("Replacement");
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("Diplomm.Models.Tables.TimetableTable", b =>
@@ -438,19 +395,19 @@ namespace Diplomm.Migrations
                         .WithMany()
                         .HasForeignKey("fkEmployees");
 
-                    b.HasOne("Diplomm.Models.Groups", "Group")
+                    b.HasOne("Diplomm.Models.Tables.OrganizationTable", "Organization")
                         .WithMany()
-                        .HasForeignKey("fkGroups");
+                        .HasForeignKey("fkOrganizations");
 
-                    b.HasOne("Diplomm.Models.Subjects", "Subject")
+                    b.HasOne("Diplomm.Models.Post", "Post")
                         .WithMany()
-                        .HasForeignKey("fkSubjects");
+                        .HasForeignKey("fkPosts");
 
                     b.Navigation("Employee");
 
-                    b.Navigation("Group");
+                    b.Navigation("Organization");
 
-                    b.Navigation("Subject");
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

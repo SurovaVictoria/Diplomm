@@ -22,7 +22,8 @@ namespace Diplomm.Controllers
         // GET: EmployeesTables
         public async Task<IActionResult> Index()
         {
-            return View(await _context.EmployeesTables.ToListAsync());
+            var appDbContext = _context.EmployeesTables.Include(e => e.Posts);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: EmployeesTables/Details/5
@@ -34,6 +35,7 @@ namespace Diplomm.Controllers
             }
 
             var employeesTable = await _context.EmployeesTables
+                .Include(e => e.Posts)
                 .FirstOrDefaultAsync(m => m.EmployeesId == id);
             if (employeesTable == null)
             {
@@ -46,6 +48,7 @@ namespace Diplomm.Controllers
         // GET: EmployeesTables/Create
         public IActionResult Create()
         {
+            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostId");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeesId,Name,Surname,Patronymic,Email")] EmployeesTable employeesTable)
+        public async Task<IActionResult> Create([Bind("EmployeesId,Name,Surname,Patronymic,Email,fkPost")] EmployeesTable employeesTable)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace Diplomm.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostId", employeesTable.fkPost);
             return View(employeesTable);
         }
 
@@ -78,6 +82,7 @@ namespace Diplomm.Controllers
             {
                 return NotFound();
             }
+            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostId", employeesTable.fkPost);
             return View(employeesTable);
         }
 
@@ -86,7 +91,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeesId,Name,Surname,Patronymic,Email")] EmployeesTable employeesTable)
+        public async Task<IActionResult> Edit(int id, [Bind("EmployeesId,Name,Surname,Patronymic,Email,fkPost")] EmployeesTable employeesTable)
         {
             if (id != employeesTable.EmployeesId)
             {
@@ -113,6 +118,7 @@ namespace Diplomm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostId", employeesTable.fkPost);
             return View(employeesTable);
         }
 
@@ -125,6 +131,7 @@ namespace Diplomm.Controllers
             }
 
             var employeesTable = await _context.EmployeesTables
+                .Include(e => e.Posts)
                 .FirstOrDefaultAsync(m => m.EmployeesId == id);
             if (employeesTable == null)
             {

@@ -10,22 +10,22 @@ using Diplomm.Models;
 
 namespace Diplomm.Controllers
 {
-    public class GroupsController : Controller
+    public class PostsController : Controller
     {
         private readonly AppDbContext _context;
 
-        public GroupsController(AppDbContext context)
+        public PostsController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Groups
+        // GET: Posts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Groups.ToListAsync());
+            return View(await _context.Posts.ToListAsync());
         }
 
-        // GET: Groups/Details/5
+        // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace Diplomm.Controllers
                 return NotFound();
             }
 
-            var groups = await _context.Groups
-                .FirstOrDefaultAsync(m => m.GroupId == id);
-            if (groups == null)
+            var post = await _context.Posts
+                .FirstOrDefaultAsync(m => m.PostId == id);
+            if (post == null)
             {
                 return NotFound();
             }
 
-            return View(groups);
+            return View(post);
         }
 
-        // GET: Groups/Create
+        // GET: Posts/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Groups/Create
+        // POST: Posts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GroupId,GroupName")] Groups groups)
+        public async Task<IActionResult> Create([Bind("PostId,PostName")] Post post)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(groups);
+                _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(groups);
+            return View(post);
         }
 
-        // GET: Groups/Edit/5
+        // GET: Posts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace Diplomm.Controllers
                 return NotFound();
             }
 
-            var groups = await _context.Groups.FindAsync(id);
-            if (groups == null)
+            var post = await _context.Posts.FindAsync(id);
+            if (post == null)
             {
                 return NotFound();
             }
-            return View(groups);
+            return View(post);
         }
 
-        // POST: Groups/Edit/5
+        // POST: Posts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GroupId,GroupName")] Groups groups)
+        public async Task<IActionResult> Edit(int id, [Bind("PostId,PostName")] Post post)
         {
-            if (id != groups.GroupId)
+            if (id != post.PostId)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace Diplomm.Controllers
             {
                 try
                 {
-                    _context.Update(groups);
+                    _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GroupsExists(groups.GroupId))
+                    if (!PostExists(post.PostId))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace Diplomm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(groups);
+            return View(post);
         }
 
-        // GET: Groups/Delete/5
+        // GET: Posts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +124,34 @@ namespace Diplomm.Controllers
                 return NotFound();
             }
 
-            var groups = await _context.Groups
-                .FirstOrDefaultAsync(m => m.GroupId == id);
-            if (groups == null)
+            var post = await _context.Posts
+                .FirstOrDefaultAsync(m => m.PostId == id);
+            if (post == null)
             {
                 return NotFound();
             }
 
-            return View(groups);
+            return View(post);
         }
 
-        // POST: Groups/Delete/5
+        // POST: Posts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var groups = await _context.Groups.FindAsync(id);
-            if (groups != null)
+            var post = await _context.Posts.FindAsync(id);
+            if (post != null)
             {
-                _context.Groups.Remove(groups);
+                _context.Posts.Remove(post);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GroupsExists(int id)
+        private bool PostExists(int id)
         {
-            return _context.Groups.Any(e => e.GroupId == id);
+            return _context.Posts.Any(e => e.PostId == id);
         }
     }
 }

@@ -28,10 +28,10 @@ namespace Diplomm.Models
         /// <summary>
         /// Суббота
         /// </summary>
-        [Display(Name = "Суббота")] Saturday
+        [Display(Name = "Суббота")] Saturday,
         /// <summary>
         /// Воскресенье
         /// </summary>
-        //[Display(Name = "Воскресенье")] Sunday
+        [Display(Name = "Воскресенье")] Sunday
     }
 }

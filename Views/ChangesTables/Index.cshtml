@@ -15,15 +15,23 @@
             <label>До:</label>
             <input id="toDate" type="date" name="ToDate" class="form-control" required />
         </div>
-        @* <div class="col-md-auto">
+        <div class="col-md-auto">
             <label class="control-label">Сотрудник: </label>
-            <input id="employee" type="search" asp-items="ViewBag.fkReplacement" name="Employee" class="form-control" required />
-        </div> *@
+            <input id="employee" type="search" asp-items="ViewBag.fkEmployees" name="Employee" class="form-control" required />
+        </div>
         <div class="col-md-auto">
             <button class="btn btn-primary btn-sm" type="submit">Отчет</button>
         </div>
     </div>
 </form>
+<p>
+    Всего: @ViewBag.Tarif
+    Заменял: @ViewBag.Replacement
+    Отменено: @ViewBag.Cancel
+    Пропущено: @ViewBag.Rep
+    Итого: @ViewBag.All смен
+Monday: @ViewBag.Count
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -63,6 +71,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Employees.EmployeesId)
             </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ChangeId">Изменить</a> |
+                    <a asp-action="Details" asp-route-id="@item.ChangeId">Просмотр</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ChangeId">Удалить</a>
+                </td>
         </tr>
 }
     </tbody>

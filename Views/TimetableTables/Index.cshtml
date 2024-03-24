@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Diplomm.Models.Tables.TimetableTable>
+﻿@using System.ComponentModel.DataAnnotations
+@using Diplomm.Models.Tables
+@model List<IGrouping<OrganizationTable?, TimetableTable>>
 
 @{
     ViewData["Title"] = "Index";
@@ -10,51 +12,50 @@
 <p>
     <a asp-action="Create">Добавить урок</a>
 </p>
-<table class="table">
+
+<table>
     <thead>
         <tr>
-            <th>
-                @Html.DisplayName("День недели")
-            </th>
-            <th>
-                @Html.DisplayName("№")
-            </th>
-            <th>
-                @Html.DisplayName("Дисциплина")
-            </th>
-            <th>
-                @Html.DisplayName("Группа")
-            </th>
-            <th>
-                @Html.DisplayName("Преподаватель")
-            </th>
             <th></th>
+            @foreach (var item in Enum.GetValues(typeof(DayOfWeeks)))
+            {
+                <th>@((item.GetType().GetField(item.ToString()).GetCustomAttributes(typeof(DisplayAttribute), false) as DisplayAttribute[])[0].Name)</th>
+            }
+        </tr>
+        <tr>
+            <th></th>
+            <th>№</th>
+            <th colspan="5"></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DayOfWeek)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Number)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject.SubjectName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Group.GroupName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Employee.FullName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TimetableID">Изменить</a> |
-                <a asp-action="Details" asp-route-id="@item.TimetableID">Просмотр</a> |
-                <a asp-action="Delete" asp-route-id="@item.TimetableID">Удалить</a>
-            </td>
-        </tr>
-}
+        @foreach (var group in Model)
+        {
+            <tr>
+                <td>@group.First().Organization.ShopName</td>
+                @foreach (var item in Enum.GetValues(typeof(DayOfWeeks)))
+                {
+                    <td>
+                        <table>
+                            @foreach (TimetableTable groupDayOfWeek in group.Where(it => it.DayOfWeek == (DayOfWeeks)item))
+                            {
+                                <tr>
+                                    <td>@(groupDayOfWeek.Number)</td>
+                                    <td>@(groupDayOfWeek.Post.PostName)</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><small>@(groupDayOfWeek.Employee.FullName)</small></td>
+                                </tr>
+                            }
+                        </table>
+                        <a class="btn btn-outline-primary btn-sm" asp-controller="TimetableTables" asp-action="Create" asp-route-idGroup="@(group.First().fkOrganizations)" asp-route-dayOfWeek="@((DayOfWeeks)item)">Добавить</a>
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td colspan="8"><hr /></td>
+            </tr>
+        }
     </tbody>
 </table>

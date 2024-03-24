@@ -51,45 +51,30 @@ namespace Diplomm.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmployeesTables",
+                name: "OrganizationTables",
                 columns: table => new
                 {
-                    EmployeesId = table.Column<int>(type: "int", nullable: false)
+                    ShopId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Patronymic = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ShopName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeesTables", x => x.EmployeesId);
+                    table.PrimaryKey("PK_OrganizationTables", x => x.ShopId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Groups",
+                name: "Posts",
                 columns: table => new
                 {
-                    GroupId = table.Column<int>(type: "int", nullable: false)
+                    PostId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GroupName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PostName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groups", x => x.GroupId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Subjects",
-                columns: table => new
-                {
-                    SubjectId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SubjectName = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Subjects", x => x.SubjectId);
+                    table.PrimaryKey("PK_Posts", x => x.PostId);
                 });
 
             migrationBuilder.CreateTable(
@@ -199,36 +184,25 @@ namespace Diplomm.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReportTables",
+                name: "EmployeesTables",
                 columns: table => new
                 {
-                    ReportId = table.Column<int>(type: "int", nullable: false)
+                    EmployeesId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Employee = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    fkLesson = table.Column<int>(type: "int", nullable: true),
-                    fkGroup = table.Column<int>(type: "int", nullable: true),
-                    fkReplacement = table.Column<int>(type: "int", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Patronymic = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    fkPost = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReportTables", x => x.ReportId);
+                    table.PrimaryKey("PK_EmployeesTables", x => x.EmployeesId);
                     table.ForeignKey(
-                        name: "FK_ReportTables_EmployeesTables_fkReplacement",
-                        column: x => x.fkReplacement,
-                        principalTable: "EmployeesTables",
-                        principalColumn: "EmployeesId");
-                    table.ForeignKey(
-                        name: "FK_ReportTables_Groups_fkGroup",
-                        column: x => x.fkGroup,
-                        principalTable: "Groups",
-                        principalColumn: "GroupId");
-                    table.ForeignKey(
-                        name: "FK_ReportTables_Subjects_fkLesson",
-                        column: x => x.fkLesson,
-                        principalTable: "Subjects",
-                        principalColumn: "SubjectId");
+                        name: "FK_EmployeesTables_Posts_fkPost",
+                        column: x => x.fkPost,
+                        principalTable: "Posts",
+                        principalColumn: "PostId");
                 });
 
             migrationBuilder.CreateTable(
@@ -239,8 +213,8 @@ namespace Diplomm.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DayOfWeek = table.Column<int>(type: "int", nullable: false),
                     Number = table.Column<int>(type: "int", nullable: false),
-                    fkSubjects = table.Column<int>(type: "int", nullable: true),
-                    fkGroups = table.Column<int>(type: "int", nullable: true),
+                    fkPosts = table.Column<int>(type: "int", nullable: true),
+                    fkOrganizations = table.Column<int>(type: "int", nullable: true),
                     fkEmployees = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -252,15 +226,15 @@ namespace Diplomm.Migrations
                         principalTable: "EmployeesTables",
                         principalColumn: "EmployeesId");
                     table.ForeignKey(
-                        name: "FK_TimetableTables_Groups_fkGroups",
-                        column: x => x.fkGroups,
-                        principalTable: "Groups",
-                        principalColumn: "GroupId");
+                        name: "FK_TimetableTables_OrganizationTables_fkOrganizations",
+                        column: x => x.fkOrganizations,
+                        principalTable: "OrganizationTables",
+                        principalColumn: "ShopId");
                     table.ForeignKey(
-                        name: "FK_TimetableTables_Subjects_fkSubjects",
-                        column: x => x.fkSubjects,
-                        principalTable: "Subjects",
-                        principalColumn: "SubjectId");
+                        name: "FK_TimetableTables_Posts_fkPosts",
+                        column: x => x.fkPosts,
+                        principalTable: "Posts",
+                        principalColumn: "PostId");
                 });
 
             migrationBuilder.CreateTable(
@@ -273,7 +247,7 @@ namespace Diplomm.Migrations
                     Cancel = table.Column<bool>(type: "bit", nullable: false),
                     Replacement = table.Column<bool>(type: "bit", nullable: false),
                     fkTimetable = table.Column<int>(type: "int", nullable: true),
-                    fkSubject = table.Column<int>(type: "int", nullable: true),
+                    fkPost = table.Column<int>(type: "int", nullable: true),
                     fkEmployee = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -285,10 +259,10 @@ namespace Diplomm.Migrations
                         principalTable: "EmployeesTables",
                         principalColumn: "EmployeesId");
                     table.ForeignKey(
-                        name: "FK_ChangesTables_Subjects_fkSubject",
-                        column: x => x.fkSubject,
-                        principalTable: "Subjects",
-                        principalColumn: "SubjectId");
+                        name: "FK_ChangesTables_Posts_fkPost",
+                        column: x => x.fkPost,
+                        principalTable: "Posts",
+                        principalColumn: "PostId");
                     table.ForeignKey(
                         name: "FK_ChangesTables_TimetableTables_fkTimetable",
                         column: x => x.fkTimetable,
@@ -341,9 +315,9 @@ namespace Diplomm.Migrations
                 column: "fkEmployee");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChangesTables_fkSubject",
+                name: "IX_ChangesTables_fkPost",
                 table: "ChangesTables",
-                column: "fkSubject");
+                column: "fkPost");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChangesTables_fkTimetable",
@@ -351,19 +325,9 @@ namespace Diplomm.Migrations
                 column: "fkTimetable");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReportTables_fkGroup",
-                table: "ReportTables",
-                column: "fkGroup");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReportTables_fkLesson",
-                table: "ReportTables",
-                column: "fkLesson");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReportTables_fkReplacement",
-                table: "ReportTables",
-                column: "fkReplacement");
+                name: "IX_EmployeesTables_fkPost",
+                table: "EmployeesTables",
+                column: "fkPost");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TimetableTables_fkEmployees",
@@ -371,14 +335,14 @@ namespace Diplomm.Migrations
                 column: "fkEmployees");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TimetableTables_fkGroups",
+                name: "IX_TimetableTables_fkOrganizations",
                 table: "TimetableTables",
-                column: "fkGroups");
+                column: "fkOrganizations");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TimetableTables_fkSubjects",
+                name: "IX_TimetableTables_fkPosts",
                 table: "TimetableTables",
-                column: "fkSubjects");
+                column: "fkPosts");
         }
 
         /// <inheritdoc />
@@ -403,9 +367,6 @@ namespace Diplomm.Migrations
                 name: "ChangesTables");
 
             migrationBuilder.DropTable(
-                name: "ReportTables");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -418,10 +379,10 @@ namespace Diplomm.Migrations
                 name: "EmployeesTables");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                name: "OrganizationTables");
 
             migrationBuilder.DropTable(
-                name: "Subjects");
+                name: "Posts");
         }
     }
 }

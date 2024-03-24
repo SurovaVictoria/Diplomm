@@ -23,8 +23,14 @@ namespace Diplomm.Controllers
         // GET: TimetableTables
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.TimetableTables.Include(t => t.Employee).Include(t => t.Group).Include(t => t.Subject);
-            return View(await appDbContext.ToListAsync());
+            List<TimetableTable> timeTableByGroup = await _context.TimetableTables
+                .Include(t => t.Employee)
+                .Include(t => t.Organization)
+                .Include(t => t.Post)
+                .ToListAsync();
+
+            var appDbContext = _context.TimetableTables.Include(t => t.Employee).Include(t => t.Organization).Include(t => t.Post);
+            return View(timeTableByGroup.GroupBy(s => s.Organization).ToList());
         }
 
         // GET: TimetableTables/Details/5
@@ -37,8 +43,8 @@ namespace Diplomm.Controllers
 
             var timetableTable = await _context.TimetableTables
                 .Include(t => t.Employee)
-                .Include(t => t.Group)
-                .Include(t => t.Subject)
+                .Include(t => t.Organization)
+                .Include(t => t.Post)
                 .FirstOrDefaultAsync(m => m.TimetableID == id);
             if (timetableTable == null)
             {
@@ -49,9 +55,9 @@ namespace Diplomm.Controllers
         }
 
         // GET: TimetableTables/Create
-        public IActionResult Create(DayOfWeeks? dayOfWeek, int? idGroup)
+        public IActionResult Create(DayOfWeeks? dayOfWeek, int? idShop)
         {
-            var currentDayItems = _context.TimetableTables.Where(t => t.DayOfWeek == dayOfWeek && t.fkGroups == idGroup);
+            var currentDayItems = _context.TimetableTables.Where(t => t.DayOfWeek == dayOfWeek && t.fkOrganizations == idShop);
             int currentMaxNumber = 0;
             if (currentDayItems.Count() > 0)
             {
@@ -59,8 +65,8 @@ namespace Diplomm.Controllers
             }
             ViewBag.NextNum = currentMaxNumber + 1;
             ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName");
-            ViewData["fkGroups"] = new SelectList(_context.Groups, "GroupId", "GroupName", idGroup);
-            ViewData["fkSubjects"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName");
+            ViewData["fkOrganizations"] = new SelectList(_context.OrganizationTables, "ShopId", "ShopName", idShop);
+            ViewData["fkPosts"] = new SelectList(_context.Posts, "PostId", "PostName");
             return View();
         }
 
@@ -70,7 +76,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TimetableID,DayOfWeek,Number,fkSubjects,fkGroups,fkEmployees")] TimetableTable timetableTable)
+        public async Task<IActionResult> Create([Bind("TimetableID,DayOfWeek,Number,fkPosts,fkOrganizations,fkEmployees")] TimetableTable timetableTable)
         {
             if (ModelState.IsValid)
             {
@@ -79,8 +85,8 @@ namespace Diplomm.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", timetableTable.fkEmployees);
-            ViewData["fkGroups"] = new SelectList(_context.Groups, "GroupId", "GroupName", timetableTable.fkGroups);
-            ViewData["fkSubjects"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName", timetableTable.fkSubjects);
+            ViewData["fkOrganizations"] = new SelectList(_context.OrganizationTables, "ShopId", "ShopName", timetableTable.fkOrganizations);
+            ViewData["fkPosts"] = new SelectList(_context.Posts, "PostId", "PostName", timetableTable.fkPosts);
             return View(timetableTable);
         }
 
@@ -98,8 +104,8 @@ namespace Diplomm.Controllers
                 return NotFound();
             }
             ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", timetableTable.fkEmployees);
-            ViewData["fkGroups"] = new SelectList(_context.Groups, "GroupId", "GroupName", timetableTable.fkGroups);
-            ViewData["fkSubjects"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName", timetableTable.fkSubjects);
+            ViewData["fkOrganizations"] = new SelectList(_context.OrganizationTables, "ShopId", "ShopName", timetableTable.fkOrganizations);
+            ViewData["fkPosts"] = new SelectList(_context.Posts, "PostId", "PostName", timetableTable.fkPosts);
             return View(timetableTable);
         }
 
@@ -108,7 +114,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TimetableID,DayOfWeek,Number,fkSubjects,fkGroups,fkEmployees")] TimetableTable timetableTable)
+        public async Task<IActionResult> Edit(int id, [Bind("TimetableID,DayOfWeek,Number,fkPosts,fkOrganizations,fkEmployees")] TimetableTable timetableTable)
         {
             if (id != timetableTable.TimetableID)
             {
@@ -136,8 +142,8 @@ namespace Diplomm.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", timetableTable.fkEmployees);
-            ViewData["fkGroups"] = new SelectList(_context.Groups, "GroupId", "GroupName", timetableTable.fkGroups);
-            ViewData["fkSubjects"] = new SelectList(_context.Subjects, "SubjectId", "SubjectName", timetableTable.fkSubjects);
+            ViewData["fkOrganizations"] = new SelectList(_context.OrganizationTables, "ShopId", "ShopName", timetableTable.fkOrganizations);
+            ViewData["fkPosts"] = new SelectList(_context.Posts, "PostId", "PostName", timetableTable.fkPosts);
             return View(timetableTable);
         }
 
@@ -151,8 +157,8 @@ namespace Diplomm.Controllers
 
             var timetableTable = await _context.TimetableTables
                 .Include(t => t.Employee)
-                .Include(t => t.Group)
-                .Include(t => t.Subject)
+                .Include(t => t.Organization)
+                .Include(t => t.Post)
                 .FirstOrDefaultAsync(m => m.TimetableID == id);
             if (timetableTable == null)
             {

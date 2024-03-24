@@ -6,10 +6,6 @@
     TimetableTable timetable = ViewBag.Timetable;
 }
 
-<h1>Create</h1>
-
-<h4>ChangesTable</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" asp-route-chancheAction="@(ViewBag.chancheAction)">
@@ -29,12 +25,12 @@
 
             @if (ViewBag.chancheAction == ChancheActions.Replace)
             {
-                <h3>Замена на ...</h3>
+                <h3>Заменяет:</h3>
                 <input type="hidden" asp-for="Replacement" value="true" />
                 <input type="hidden" asp-for="Cancel" value="false" />
                 <div class="form-group">
-                    <label asp-for="fkSubject" class="control-label"></label>
-                    <select asp-for="fkSubject" class="form-control" asp-items="ViewBag.fkSubject"></select>
+                    <label asp-for="fkPost" class="control-label"></label>
+                    <select asp-for="fkPost" class="form-control" asp-items="ViewBag.fkPost"></select>
                 </div>
                 <div class="form-group">
                     <label asp-for="fkEmployee" class="control-label"></label>
@@ -43,21 +39,18 @@
             }
             else
             {
-                <h3>Отмена занятия</h3>
+                <h3>Отмена смены</h3>
                 <input type="hidden" asp-for="Replacement" value="false" />
                 <input type="hidden" asp-for="Cancel" value="true" />
             }
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Изменить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

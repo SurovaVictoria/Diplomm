@@ -1,6 +1,6 @@
 ﻿@using Diplomm.Models.Tables;
 @using System.ComponentModel.DataAnnotations;
-@model List<IGrouping<Groups?, TimetableTable>>
+@model List<IGrouping<OrganizationTable?, TimetableTable>>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -21,7 +21,7 @@
             }
         </tr>
         <tr>
-            <th>Гр.</th>
+            <th></th>
             <th>№</th>
             <th colspan="5"></th>
         </tr>
@@ -30,7 +30,7 @@
         @foreach (var group in Model)
         {
             <tr>
-                <td>@group.First().Group.GroupName</td>
+                <td>@group.First().Organization.ShopName</td>
                 @foreach (var item in Enum.GetValues(typeof(DayOfWeeks)))
                 {
                     <td>
@@ -44,7 +44,7 @@
                                 }
                                 <tr>
                                     <td>@if (groupDayOfWeek.Number == 0) { <i class="bi bi-x-circle"></i> } else { @(groupDayOfWeek.Number) }</td>
-                                    <td class="@(style)"> @(groupDayOfWeek.Subject.SubjectName)</td>
+                                    <td class="@(style)"> @(groupDayOfWeek.Post.PostName)</td>
                                     <td rowspan="2"><a class="btn btn-warning" asp-controller="ChangesTables" asp-action="Create" asp-route-idTimetable="@(groupDayOfWeek.TimetableID)"><i class="bi bi-arrow-down-up"></i></a><a class="btn btn-danger" asp-controller="ChangesTables" asp-action="Create" asp-route-idTimetable="@(groupDayOfWeek.TimetableID)" asp-route-chancheAction="@(ChancheActions.Cancel)"><i class="bi bi-x-circle"></i></a></td>
                                 </tr>
                                 <tr>
@@ -54,7 +54,7 @@
                                 </tr>
                             }
                         </table>
-                        <a class="btn btn-outline-primary btn-sm" asp-controller="TimetableTables" asp-action="Create" asp-route-idGroup="@(group.First().fkGroups)" asp-route-dayOfWeek="@((DayOfWeeks)item)">Добавить</a>
+                        <a class="btn btn-outline-primary btn-sm" asp-controller="TimetableTables" asp-action="Create" asp-route-idGroup="@(group.First().fkOrganizations)" asp-route-dayOfWeek="@((DayOfWeeks)item)">Добавить</a>
                     </td>
                 }
             </tr>

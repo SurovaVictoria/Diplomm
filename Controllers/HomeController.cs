@@ -12,7 +12,7 @@ namespace Diplomm.Controllers
     {
         private readonly AppDbContext _context;
 
-        private string[] Months = new string[] { "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Нобяря", "Декабря" };
+        private string[] Months = new string[] { "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря" };
         public HomeController(AppDbContext context)
         {
             _context = context;
@@ -23,47 +23,39 @@ namespace Diplomm.Controllers
             // Получаем текущее рассписние
             List<TimetableTable> timeTableByGroup = await _context.TimetableTables
                 .Include(t => t.Employee)
-                .Include(t => t.Group)
-                .Include(t => t.Subject)
+                .Include(t => t.Organization)
+                .Include(t => t.Post)
                 .ToListAsync();
 
             // Получить период дат текущей недели
 
             var deltaDaysOfWeekToMonday = DayOfWeek.Monday - DateTime.Now.DayOfWeek;
             DateTime dateMonday = DateTime.Now.AddDays(deltaDaysOfWeekToMonday);
-            DateTime dateSaturday = dateMonday.AddDays(5);
+            DateTime dateSunday = dateMonday.AddDays(6);
 
-            ViewBag.Dates = $"{dateMonday.Day} {Months[dateMonday.Month - 1]} - {dateSaturday.Day} {Months[dateSaturday.Month - 1]}";
+            ViewBag.Dates = $"{dateMonday.Day} {Months[dateMonday.Month - 1]} - {dateSunday.Day} {Months[dateSunday.Month - 1]}";
             // Получаем изменения текущей недели
-            var changeTimetable = _context.ChangesTables.Where(it => it.DateChange >= dateMonday.Date && it.DateChange <= dateSaturday.Date)
+            var changeTimetable = _context.ChangesTables.Where(it => it.DateChange >= dateMonday.Date && it.DateChange <= dateSunday.Date)
                 .Include(t => t.Employees)
-                .Include(t => t.Subjects)
+                .Include(t => t.Posts)
                 .ToList();
 
-            // Привести текущее рассписание в актуальный вид
+            // Привели текущее рассписание в актуальный вид
             foreach(var change in changeTimetable)
             {
                 var editItem = timeTableByGroup.Where(it => it.TimetableID == change.fkTimetable).FirstOrDefault();
                 if(change.Replacement)
                 {
                     editItem.Employee = change.Employees;
-                    editItem.Subject = change.Subjects;
+                    editItem.Post = change.Posts;
                 }
                 else
                 {
                     editItem.Number = 0;
                 }
             }
-            //int idTimeTable = 0;
-            //var changeItem = timeTableByGroup.Where(it => it.TimetableID == idTimeTable).FirstOrDefault();
-            //if(changeItem != null)
-            //{
-            //    changeItem.fkEmployees = 0;
-            //    //changeItem.Description = "";
-            //}
-
-            //
-            return View(timeTableByGroup.GroupBy(s => s.Group).ToList());
+            
+            return View(timeTableByGroup.GroupBy(s => s.Organization).ToList());
         }
 
 

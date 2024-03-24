@@ -2,28 +2,30 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Список сотрудников</h1>
+<h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Добавить сотрудника</a>
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayName("Имя")
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayName("Фамилия")
+                @Html.DisplayNameFor(model => model.Surname)
             </th>
             <th>
-                @Html.DisplayName("Отчество")
+                @Html.DisplayNameFor(model => model.Patronymic)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Posts)
             </th>
             <th></th>
         </tr>
@@ -44,9 +46,12 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.EmployeesId">Изменить</a> |
-                <a asp-action="Details" asp-route-id="@item.EmployeesId">Просмотр</a> |
-                <a asp-action="Delete" asp-route-id="@item.EmployeesId">Удалить</a>
+                @Html.DisplayFor(modelItem => item.Posts.PostId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EmployeesId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EmployeesId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EmployeesId">Delete</a>
             </td>
         </tr>
 }

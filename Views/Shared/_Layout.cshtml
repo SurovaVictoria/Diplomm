@@ -14,10 +14,10 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
-                <a class="navbar-brand">Учет</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                @* <a class="navbar-brand">Учет</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation"> *@
+                    @* <span class="navbar-toggler-icon"></span> *@
+                @* </button> *@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
                      <li class="nav-item">
@@ -27,16 +27,16 @@
                             <a class="nav-link" asp-area="" asp-controller="TimetableTables" asp-action="Index">Расписание</a>
                         </li>
                             <li class="nav-item">
-                            <a class="nav-link"  asp-area="" asp-controller="ReportTables1" asp-action="Index">Отчет</a>
+                            <a class="nav-link"  asp-area="" asp-controller="ChangesTables" asp-action="Index">Отчет</a>
                         </li>
                              <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="EmployeesTables" asp-action="Index">Сотрудники</a>
                         </li>
                             <li class="nav-item">
-                            <a class="nav-link"  asp-area="" asp-controller="Groups" asp-action="Index">Группы</a>
+                            <a class="nav-link"  asp-area="" asp-controller="OrganizationTables" asp-action="Index">Организации</a>
                         </li>
                              <li class="nav-item">
-                            <a class="nav-link"  asp-area="" asp-controller="Subjects" asp-action="Index">Предметы</a>
+                            <a class="nav-link"  asp-area="" asp-controller="Subjects" asp-action="Index">Должности</a>
                         </li>
 
                     </ul>

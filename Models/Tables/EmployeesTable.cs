@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Diplomm.Models.Tables
 {
@@ -25,5 +26,8 @@ namespace Diplomm.Models.Tables
         [DisplayName("Электронная почта")]
         [EmailAddress]
         public string? Email { get; set; }
+        public int? fkPost { get; set; }
+        [ForeignKey("fkPost")]
+        public Post? Posts { get; set; }
     }
 }

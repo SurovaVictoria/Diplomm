@@ -12,18 +12,18 @@ namespace Diplomm.Models.Tables
         public int TimetableID { get; set; }
         [DisplayName("День недели")]
         public DayOfWeeks DayOfWeek { get; set; }
-        [DisplayName("Номер урока")]
+        [DisplayName("Порядковый номер")]
         public int Number { get; set; }
 
-        [DisplayName("Предмет")]
-        public int? fkSubjects { get; set; }
-        [ForeignKey("fkSubjects")]
-        public Subjects? Subject { get; set; }
+        [DisplayName("Должность")]
+        public int? fkPosts { get; set; }
+        [ForeignKey("fkPosts")]
+        public Post? Post { get; set; }
 
-        [DisplayName("Группа")]
-        public int? fkGroups { get; set; }
-        [ForeignKey("fkGroups")]
-        public Groups? Group { get; set; }
+        [DisplayName("Организация")]
+        public int? fkOrganizations { get; set; }
+        [ForeignKey("fkOrganizations")]
+        public OrganizationTable? Organization { get; set; }
 
         public int? fkEmployees { get; set; }
         [ForeignKey("fkEmployees")]
@@ -32,9 +32,9 @@ namespace Diplomm.Models.Tables
         public string? GetName {
             get
             {
-                string subject = Subject == null ? "" : Subject.SubjectName ?? "-";
+                string post = Post == null ? "" : Post.PostName ?? "-";
                 string nameOfWeek = (DayOfWeek.GetType().GetField(DayOfWeek.ToString()).GetCustomAttributes(typeof(DisplayAttribute), false) as DisplayAttribute[])[0].Name;
-                return $"{nameOfWeek} {Number}. {subject}";
+                return $"{nameOfWeek} {Number} {post}";
             }
         }
 
