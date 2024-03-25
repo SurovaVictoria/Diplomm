@@ -17,12 +17,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" value="@ViewBag.NextNum" />
+                <input asp-for="Number" class="form-control" value="@ViewBag.NextNum"/>
                 <span asp-validation-for="Number" class="text-danger">№</span>
             </div>
             <div class="form-group">
                 <label asp-for="fkPosts" class="control-label"></label>
-                <select asp-for="fkPosts" class ="form-control" asp-items="ViewBag.fkPosts">Должность</select>
+                <select asp-for="fkPosts" class ="form-control" asp-items="ViewBag.fkPosts"></select>
             </div>
             <div class="form-group">
                 <label asp-for="fkOrganizations" class="control-label"></label>

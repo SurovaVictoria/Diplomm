@@ -48,7 +48,7 @@ namespace Diplomm.Controllers
         // GET: EmployeesTables/Create
         public IActionResult Create()
         {
-            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostId");
+            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostName");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace Diplomm.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostId", employeesTable.fkPost);
+            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostName", employeesTable.fkPost);
             return View(employeesTable);
         }
 
@@ -82,7 +82,7 @@ namespace Diplomm.Controllers
             {
                 return NotFound();
             }
-            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostId", employeesTable.fkPost);
+            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostName", employeesTable.fkPost);
             return View(employeesTable);
         }
 
@@ -118,7 +118,7 @@ namespace Diplomm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostId", employeesTable.fkPost);
+            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostName", employeesTable.fkPost);
             return View(employeesTable);
         }
 

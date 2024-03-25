@@ -45,7 +45,7 @@
                                 <tr>
                                     <td>@if (groupDayOfWeek.Number == 0) { <i class="bi bi-x-circle"></i> } else { @(groupDayOfWeek.Number) }</td>
                                     <td class="@(style)"> @(groupDayOfWeek.Post.PostName)</td>
-                                    <td rowspan="2"><a class="btn btn-warning" asp-controller="ChangesTables" asp-action="Create" asp-route-idTimetable="@(groupDayOfWeek.TimetableID)"><i class="bi bi-arrow-down-up"></i></a><a class="btn btn-danger" asp-controller="ChangesTables" asp-action="Create" asp-route-idTimetable="@(groupDayOfWeek.TimetableID)" asp-route-chancheAction="@(ChancheActions.Cancel)"><i class="bi bi-x-circle"></i></a></td>
+                                    <td rowspan="2"><a class="btn btn-secondary" asp-controller="ChangesTables" asp-action="Create" asp-route-idTimetable="@(groupDayOfWeek.TimetableID)"><i class="bi bi-arrow-down-up"></i></a><a class="btn btn-danger" asp-controller="ChangesTables" asp-action="Create" asp-route-idTimetable="@(groupDayOfWeek.TimetableID)" asp-route-chancheAction="@(ChancheActions.Cancel)"><i class="bi bi-x-circle"></i></a></td>
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -54,7 +54,7 @@
                                 </tr>
                             }
                         </table>
-                        <a class="btn btn-outline-primary btn-sm" asp-controller="TimetableTables" asp-action="Create" asp-route-idGroup="@(group.First().fkOrganizations)" asp-route-dayOfWeek="@((DayOfWeeks)item)">Добавить</a>
+                        <a class="bi bi-arrow-left-square" asp-controller="TimetableTables" asp-action="Create" asp-route-idShop="@(group.First().fkOrganizations)" asp-route-dayOfWeek="@((DayOfWeeks)item)">Добавить</a>
                     </td>
                 }
             </tr>

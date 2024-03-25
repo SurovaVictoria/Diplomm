@@ -4,9 +4,8 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Сотрудники</h1>
 
-<h4>EmployeesTable</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -37,14 +36,14 @@
                 <select asp-for="fkPost" class ="form-control" asp-items="ViewBag.fkPost"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Добавить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="bi bi-arrow-left-square" asp-action="Index">Вернуться</a>
 </div>
 
 @section Scripts {

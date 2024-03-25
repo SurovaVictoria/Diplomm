@@ -42,6 +42,8 @@
                                 <tr>
                                     <td>@(groupDayOfWeek.Number)</td>
                                     <td>@(groupDayOfWeek.Post.PostName)</td>
+                                    <td rowspan="2"><a class="btn btn-secondary" asp-controller="TimetableTables" asp-action="Edit" asp-route-id="@groupDayOfWeek.TimetableID"><i class="bi bi-pencil-square"></i></a><a class="btn btn-danger" asp-controller="TimetableTables" asp-action="Delete" asp-route-id="@groupDayOfWeek.TimetableID"><i class="bi bi-trash"></i></a></td>
+
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -49,7 +51,7 @@
                                 </tr>
                             }
                         </table>
-                        <a class="btn btn-outline-primary btn-sm" asp-controller="TimetableTables" asp-action="Create" asp-route-idGroup="@(group.First().fkOrganizations)" asp-route-dayOfWeek="@((DayOfWeeks)item)">Добавить</a>
+                        <a class="btn btn-outline-primary btn-sm" asp-controller="TimetableTables" asp-action="Create" asp-route-idShop="@(group.First().fkOrganizations)" asp-route-dayOfWeek="@((DayOfWeeks)item)">Добавить</a>
                     </td>
                 }
             </tr>

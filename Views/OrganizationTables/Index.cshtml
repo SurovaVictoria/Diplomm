@@ -3,11 +3,8 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Index</h1>
-
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="bi bi-plus-square" asp-action="Create">Добавить оранизацию</a>
 </p>
 <table class="table">
     <thead>
@@ -31,9 +28,9 @@
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ShopId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ShopId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ShopId">Delete</a>
+                <a class="bi bi-pencil-square" asp-action="Edit" asp-route-id="@item.ShopId"></a> |
+                @* <a asp-action="Details" asp-route-id="@item.ShopId">Details</a> | *@
+                <a class="bi bi-trash"  asp-action="Delete" asp-route-id="@item.ShopId"></a>
             </td>
         </tr>
 }
