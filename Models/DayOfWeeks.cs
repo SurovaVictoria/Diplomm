@@ -32,6 +32,6 @@ namespace Diplomm.Models
         /// <summary>
         /// Воскресенье
         /// </summary>
-        [Display(Name = "Воскресенье")] Sunday
+        //[Display(Name = "Воскресенье")] Sunday
     }
 }

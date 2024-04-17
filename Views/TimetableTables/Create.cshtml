@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h4>Добавьтe смену в расписание</h4>
+<h4>Добавьтe урок в расписание</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -21,16 +21,16 @@
                 <span asp-validation-for="Number" class="text-danger">№</span>
             </div>
             <div class="form-group">
-                <label asp-for="fkPosts" class="control-label"></label>
+                <label asp-for="fkPosts" class="control-label">Предмет</label>
                 <select asp-for="fkPosts" class ="form-control" asp-items="ViewBag.fkPosts"></select>
             </div>
             <div class="form-group">
-                <label asp-for="fkOrganizations" class="control-label"></label>
-                <select asp-for="fkOrganizations" class ="form-control" asp-items="ViewBag.fkOrganizations">Организация</select>
+                <label asp-for="fkOrganizations" class="control-label">Группа</label>
+                <select asp-for="fkOrganizations" class ="form-control" asp-items="ViewBag.fkOrganizations"></select>
             </div>
             <div class="form-group">
-                <label asp-for="fkEmployees" class="control-label"></label>
-                <select asp-for="fkEmployees" class ="form-control" asp-items="ViewBag.fkEmployees">Сотрудник</select>
+                <label asp-for="fkEmployees" class="control-label">Преподаватель</label>
+                <select asp-for="fkEmployees" class ="form-control" asp-items="ViewBag.fkEmployees"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Добавить" class="btn btn-primary" />

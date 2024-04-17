@@ -89,14 +89,14 @@ namespace Diplomm.Controllers
                 appDbContext3 = appDbContext3.Where(it => it.Replacement == true && it.Timetable.fkEmployees == employee);
 
                 var fr = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Friday);
-                var sn = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Sunday);
+                //var sn = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Sunday);
                 var th = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Thursday);
                 var tu = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Tuesday);
                 var st = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Saturday);
                 var mn = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Monday);
                 var wd = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Wednesday);
 
-                int allTarif = (fr.Count() * countFr) + (sn.Count() * countSn) + (th.Count() * countTh) + (tu.Count() * countTu) + (st.Count() * countSt) + (mn.Count() * count) + (wd.Count() * countWd);
+                int allTarif = (fr.Count() * countFr) + (th.Count() * countTh) + (tu.Count() * countTu) + (st.Count() * countSt) + (mn.Count() * count) + (wd.Count() * countWd);
                 //int countTarif = appDbContextTimetable.Count();
                 int countReplacement = appDbContext.Count();
                 int countCancel = appDbContext2.Count();
@@ -143,7 +143,7 @@ namespace Diplomm.Controllers
             //    ViewBag.Rep = countReplacementTwo;
             //    ViewBag.All = countAll;
             //}
-            
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName");
 
             return View(await appDbContext.ToListAsync());
         }

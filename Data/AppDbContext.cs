@@ -22,7 +22,7 @@ namespace Diplomm.Data
         public DbSet<ChangesTable> ChangesTables => Set<ChangesTable>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=LAPTOP-MPE0H8CI\\SQLEXPRESS;Database=mon;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=mon;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=true");
         }
     }
 

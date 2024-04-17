@@ -17,7 +17,7 @@
         </div>
         <div class="col-md-auto">
             <label class="control-label">Сотрудник: </label>
-            <input id="employee" type="search" asp-items="ViewBag.fkEmployees" name="employee" class="form-control" required />
+            <select id="employee" type="search" asp-items="ViewBag.fkEmployee" name="employee" class="form-control"></select>
         </div>
         <div class="col-md-auto">
             <button class="btn btn-primary btn-sm" type="submit">Отчет</button>
@@ -26,10 +26,10 @@
 </form>
 
 <p> Всего: @ViewBag.Tarif </p>
-<p> Заменял: @ViewBag.Replacement раз</p>
-<p> Отменено: @ViewBag.Cancel смен</p>
-<p> Пропущено: @ViewBag.Rep смен</p>
-<p> Итого: @ViewBag.All смен</p>
+<p> Заменял: @ViewBag.Replacement ч.</p>
+<p> Отменено: @ViewBag.Cancel ч.</p>
+<p> Пропущено: @ViewBag.Rep ч.</p>
+<p> Итого: @ViewBag.All ч.</p>
 @* 
 <table class="table">
     <thead>

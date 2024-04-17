@@ -15,12 +15,12 @@ namespace Diplomm.Models.Tables
         [DisplayName("Порядковый номер")]
         public int Number { get; set; }
 
-        [DisplayName("Должность")]
+        [DisplayName("Предмет")]
         public int? fkPosts { get; set; }
         [ForeignKey("fkPosts")]
         public Post? Post { get; set; }
 
-        [DisplayName("Организация")]
+        [DisplayName("Группа")]
         public int? fkOrganizations { get; set; }
         [ForeignKey("fkOrganizations")]
         public OrganizationTable? Organization { get; set; }

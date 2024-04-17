@@ -31,11 +31,11 @@ namespace Diplomm.Controllers
 
             var deltaDaysOfWeekToMonday = DayOfWeek.Monday - DateTime.Now.DayOfWeek;
             DateTime dateMonday = DateTime.Now.AddDays(deltaDaysOfWeekToMonday);
-            DateTime dateSunday = dateMonday.AddDays(6);
+            DateTime dateSaturday = dateMonday.AddDays(5);
 
-            ViewBag.Dates = $"{dateMonday.Day} {Months[dateMonday.Month - 1]} - {dateSunday.Day} {Months[dateSunday.Month - 1]}";
+            ViewBag.Dates = $"{dateMonday.Day} {Months[dateMonday.Month - 1]} - {dateSaturday.Day} {Months[dateSaturday.Month - 1]}";
             // Получаем изменения текущей недели
-            var changeTimetable = _context.ChangesTables.Where(it => it.DateChange >= dateMonday.Date && it.DateChange <= dateSunday.Date)
+            var changeTimetable = _context.ChangesTables.Where(it => it.DateChange >= dateMonday.Date && it.DateChange <= dateSaturday.Date)
                 .Include(t => t.Employees)
                 .Include(t => t.Posts)
                 .ToList();

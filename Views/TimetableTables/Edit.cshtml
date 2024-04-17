@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h4>Изменение смены в расписании</h4>
+<h4>Изменение урока в расписании</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,19 +18,19 @@
                 <span asp-validation-for="DayOfWeek" class="text-danger">День недели</span>
             </div>
             <div class="form-group">
-                <label asp-for="fkPosts" class="control-label"></label>
+                <label asp-for="fkPosts" class="control-label">Предмет</label>
                 <select asp-for="fkPosts" class="form-control" asp-items="ViewBag.fkPosts"></select>
-                <span asp-validation-for="fkPosts" class="text-danger">Должность</span>
+                <span asp-validation-for="fkPosts" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="fkOrganizations" class="control-label"></label>
-                <select asp-for="fkOrganizations" class="form-control" asp-items="ViewBag.fkGroups"></select>
-                <span asp-validation-for="fkOrganizations" class="text-danger">Организация</span>
+                <label asp-for="fkOrganizations" class="control-label">Группа</label>
+                <select asp-for="fkOrganizations" class="form-control" asp-items="ViewBag.fkPosts"></select>
+                <span asp-validation-for="fkOrganizations" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="fkEmployees" class="control-label"></label>
+                <label asp-for="fkEmployees" class="control-label">Преподаватель</label>
                 <select asp-for="fkEmployees" class="form-control" asp-items="ViewBag.fkEmployees"></select>
-                <span asp-validation-for="fkEmployees" class="text-danger">Сотрудник</span>
+                <span asp-validation-for="fkEmployees" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-primary" />

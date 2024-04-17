@@ -10,12 +10,12 @@ namespace Diplomm.Models.Tables
         /// <summary>
         /// Название магазина
         /// </summary>
-        [DisplayName("Название магазина")]
+        [DisplayName("Группа")]
         public string? ShopName { get; set; }
         /// <summary>
         /// Адрес магазина
         /// </summary>
-        [DisplayName("Адрес магазина")]
+        [DisplayName("Специальность")]
         public string? Address { get; set; }
     }
 }

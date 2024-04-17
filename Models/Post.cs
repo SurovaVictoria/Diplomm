@@ -7,7 +7,7 @@ namespace Diplomm.Models
     {
         [Key]
         public int PostId {  get; set; }
-        [DisplayName("Название должности")]
+        [DisplayName("Предмет")]
         public string? PostName { get; set; }
     }
 }
