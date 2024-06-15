@@ -8,19 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using Diplomm.Data;
 using Diplomm.Models.Tables;
 using Diplomm.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Diplomm.Controllers
 {
     public class TimetableTablesController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly UserManager<EmployeesTable> _userManager;
 
-        public TimetableTablesController(AppDbContext context)
+        public TimetableTablesController(UserManager<EmployeesTable> userManager, AppDbContext context)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: TimetableTables
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             List<TimetableTable> timeTableByGroup = await _context.TimetableTables
@@ -33,28 +38,8 @@ namespace Diplomm.Controllers
             return View(timeTableByGroup.GroupBy(s => s.Organization).ToList());
         }
 
-        // GET: TimetableTables/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var timetableTable = await _context.TimetableTables
-                .Include(t => t.Employee)
-                .Include(t => t.Organization)
-                .Include(t => t.Post)
-                .FirstOrDefaultAsync(m => m.TimetableID == id);
-            if (timetableTable == null)
-            {
-                return NotFound();
-            }
-
-            return View(timetableTable);
-        }
-
         // GET: TimetableTables/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(DayOfWeeks? dayOfWeek, int? idShop)
         {
             var currentDayItems = _context.TimetableTables.Where(t => t.DayOfWeek == dayOfWeek && t.fkOrganizations == idShop);
@@ -64,7 +49,7 @@ namespace Diplomm.Controllers
                 currentMaxNumber = currentDayItems.Max(m => m.Number);
             }
             ViewBag.NextNum = currentMaxNumber + 1;
-            ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName");
+            ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "Id", "FullName");
             ViewData["fkOrganizations"] = new SelectList(_context.OrganizationTables, "ShopId", "ShopName", idShop);
             ViewData["fkPosts"] = new SelectList(_context.Posts, "PostId", "PostName");
             return View();
@@ -76,6 +61,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("TimetableID,DayOfWeek,Number,fkPosts,fkOrganizations,fkEmployees")] TimetableTable timetableTable)
         {
             if (ModelState.IsValid)
@@ -84,13 +70,14 @@ namespace Diplomm.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", timetableTable.fkEmployees);
+            ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "Id", "FullName", timetableTable.fkEmployees);
             ViewData["fkOrganizations"] = new SelectList(_context.OrganizationTables, "ShopId", "ShopName", timetableTable.fkOrganizations);
             ViewData["fkPosts"] = new SelectList(_context.Posts, "PostId", "PostName", timetableTable.fkPosts);
             return View(timetableTable);
         }
 
         // GET: TimetableTables/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -103,7 +90,7 @@ namespace Diplomm.Controllers
             {
                 return NotFound();
             }
-            ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", timetableTable.fkEmployees);
+            ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "Id", "FullName", timetableTable.fkEmployees);
             ViewData["fkOrganizations"] = new SelectList(_context.OrganizationTables, "ShopId", "ShopName", timetableTable.fkOrganizations);
             ViewData["fkPosts"] = new SelectList(_context.Posts, "PostId", "PostName", timetableTable.fkPosts);
             return View(timetableTable);
@@ -114,6 +101,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("TimetableID,DayOfWeek,Number,fkPosts,fkOrganizations,fkEmployees")] TimetableTable timetableTable)
         {
             if (id != timetableTable.TimetableID)
@@ -141,13 +129,14 @@ namespace Diplomm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", timetableTable.fkEmployees);
+            ViewData["fkEmployees"] = new SelectList(_context.EmployeesTables, "Id", "FullName", timetableTable.fkEmployees);
             ViewData["fkOrganizations"] = new SelectList(_context.OrganizationTables, "ShopId", "ShopName", timetableTable.fkOrganizations);
             ViewData["fkPosts"] = new SelectList(_context.Posts, "PostId", "PostName", timetableTable.fkPosts);
             return View(timetableTable);
         }
 
         // GET: TimetableTables/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -171,6 +160,7 @@ namespace Diplomm.Controllers
         // POST: TimetableTables/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var timetableTable = await _context.TimetableTables.FindAsync(id);

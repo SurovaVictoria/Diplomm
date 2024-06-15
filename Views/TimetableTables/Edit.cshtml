@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h4>Изменение урока в расписании</h4>
+<h4>Внесите изменения</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -13,9 +13,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TimetableID" />
             <div class="form-group">
-                <label asp-for="DayOfWeek" class="control-label"></label>
+                <label asp-for="DayOfWeek" class="control-label">День недели</label>
                 <select asp-for="DayOfWeek" asp-items="@Html.GetEnumSelectList<DayOfWeeks>()" class="form-control"></select>
-                <span asp-validation-for="DayOfWeek" class="text-danger">День недели</span>
+                <span asp-validation-for="DayOfWeek" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Number" class="control-label">Номер</label>
+                <input asp-for="Number" asp-items="@ViewBag.NextNum" class="form-control"></input>
+                <span asp-validation-for="Number" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="fkPosts" class="control-label">Предмет</label>
@@ -24,7 +29,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="fkOrganizations" class="control-label">Группа</label>
-                <select asp-for="fkOrganizations" class="form-control" asp-items="ViewBag.fkPosts"></select>
+                <select asp-for="fkOrganizations" class="form-control" asp-items="ViewBag.fkOrganizations"></select>
                 <span asp-validation-for="fkOrganizations" class="text-danger"></span>
             </div>
             <div class="form-group">

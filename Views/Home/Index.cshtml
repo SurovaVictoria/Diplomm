@@ -1,9 +1,17 @@
 ﻿@using Diplomm.Models.Tables;
 @using System.ComponentModel.DataAnnotations;
+@using Diplomm.Components;
+@addTagHelper *, Diplomm
 @model List<IGrouping<OrganizationTable?, TimetableTable>>
 @{
     ViewData["Title"] = "Home Page";
 }
+
+
+    <div class="text-center">
+        <h1 class="display-3">Добро пожаловать!</h1>
+        <vc:account-menu></vc:account-menu>
+    </div>
 
 <div class="text-center">
     <h1 class="display-4">Актуальное расписание</h1>
@@ -45,7 +53,9 @@
                                 <tr>
                                     <td>@if (groupDayOfWeek.Number == 0) { <i class="bi bi-x-circle"></i> } else { @(groupDayOfWeek.Number) }</td>
                                     <td class="@(style)"> @(groupDayOfWeek.Post.PostName)</td>
+                                    @if (User.IsInRole("Admin")) {
                                     <td rowspan="2"><a class="btn btn-secondary" asp-controller="ChangesTables" asp-action="Create" asp-route-idTimetable="@(groupDayOfWeek.TimetableID)"><i class="bi bi-arrow-down-up"></i></a><a class="btn btn-danger" asp-controller="ChangesTables" asp-action="Create" asp-route-idTimetable="@(groupDayOfWeek.TimetableID)" asp-route-chancheAction="@(ChancheActions.Cancel)"><i class="bi bi-x-circle"></i></a></td>
+                                    }
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -54,7 +64,9 @@
                                 </tr>
                             }
                         </table>
-                        <a class="bi bi-arrow-left-square" asp-controller="TimetableTables" asp-action="Create" asp-route-idShop="@(group.First().fkOrganizations)" asp-route-dayOfWeek="@((DayOfWeeks)item)">Добавить</a>
+                        @if (User.IsInRole("Admin")) {
+                            <a class="btn btn-outline-primary btn-sm" asp-controller="TimetableTables" asp-action="Create" asp-route-idShop="@(group.First().fkOrganizations)" asp-route-dayOfWeek="@((DayOfWeeks)item)">Добавить</a>
+                        }
                     </td>
                 }
             </tr>

@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Diplomm.Data;
 using Diplomm.Models.Tables;
 using Diplomm.Models;
+using GemBox.Pdf;
+using GemBox.Pdf.Content;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Diplomm.Controllers
 {
@@ -21,6 +24,7 @@ namespace Diplomm.Controllers
         }
 
         // GET: ChangesTables
+        [Authorize]
         public async Task<IActionResult> Index(int? employee)
         {
             IQueryable<TimetableTable> appDbContextTimetable = _context.TimetableTables.Include(r => r.Employee);
@@ -108,66 +112,12 @@ namespace Diplomm.Controllers
                 ViewBag.Cancel = countCancel;
                 ViewBag.Rep = countReplacementTwo;
                 ViewBag.All = countAll;
-
             }
-
-            //if (employee != null && employee != 0)
-            //{
-            //    appDbContextTimetable = appDbContextTimetable.Where(it => it.fkEmployees == employee);
-            //    appDbContext = appDbContext.Where(it => it.Replacement == true  && it.fkEmployee==employee);
-            //    appDbContext2 = appDbContext2.Where(it => it.Cancel == true && it.Timetable.fkEmployees == employee);
-            //    appDbContext3 = appDbContext3.Where(it => it.Replacement == true && it.Timetable.fkEmployees == employee);
-
-            //    var fr = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Friday);
-            //    var sn = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Sunday);
-            //    var th = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Thursday);
-            //    var tu = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Tuesday);
-            //    var st = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Saturday);
-            //    var mn = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Monday);
-            //    var wd = appDbContextTimetable.Where(it => it.fkEmployees == employee && it.DayOfWeek == DayOfWeeks.Wednesday);
-
-            //    int s = fr.Count() * count
-
-            //    int allTarif = fr.Count() + sn.Count() + th.Count() + tu.Count() + st.Count() + mn.Count() + wd.Count();
-
-            //    int countTarif = appDbContextTimetable.Count();
-            //    int countReplacement = appDbContext.Count();
-            //    int countCancel = appDbContext2.Count();
-            //    int countReplacementTwo = appDbContext3.Count();
-            //    int countAll = countTarif + countReplacement - countCancel - countReplacementTwo;
-
-            //    int c = g.Count();
-            //    ViewBag.Tarif = countTarif;
-            //    ViewBag.Replacement = countReplacement;
-            //    ViewBag.Cancel = countCancel;
-            //    ViewBag.Rep = countReplacementTwo;
-            //    ViewBag.All = countAll;
-            //}
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName");
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "Id", "FullName");
 
             return View(await appDbContext.ToListAsync());
         }
-
-        // GET: ChangesTables/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var changesTable = await _context.ChangesTables
-                .Include(c => c.Employees)
-                .Include(c => c.Timetable)
-                .FirstOrDefaultAsync(m => m.ChangeId == id);
-            if (changesTable == null)
-            {
-                return NotFound();
-            }
-
-            return View(changesTable);
-        }
-
+        [Authorize(Roles="Admin")]
         // GET: ChangesTables/Create
         public IActionResult Create(int idTimetable, ChancheActions chancheAction = ChancheActions.Replace)
         {
@@ -185,7 +135,7 @@ namespace Diplomm.Controllers
 
             ViewBag.chancheAction = chancheAction;
 
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName");
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "Id", "FullName");
             ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostName");
             return View();
         }
@@ -195,6 +145,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ChangeId,DateChange,Cancel,Replacement,fkTimetable,fkEmployee,fkPost")] ChangesTable changesTable, ChancheActions chancheAction)
         {
             if (ModelState.IsValid)
@@ -211,12 +162,13 @@ namespace Diplomm.Controllers
             DateTime dateSelect = DateTime.Now.AddDays(deltaDaysOfWeekToSelect);
             ViewBag.DateSelect = dateSelect.ToString("yyyy-MM-dd");
             ViewBag.chancheAction = chancheAction;
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", changesTable.fkEmployee);
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "Id", "FullName", changesTable.fkEmployee);
             ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostName");
             return View(changesTable);
         }
 
         // GET: ChangesTables/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -229,7 +181,7 @@ namespace Diplomm.Controllers
             {
                 return NotFound();
             }
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "FullName", changesTable.fkEmployee);
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "Id", "FullName", changesTable.fkEmployee);
             ViewData["fkTimetable"] = new SelectList(_context.TimetableTables.Include(s => s.Post), "TimetableID", "GetName", changesTable.fkTimetable);
             return View(changesTable);
         }
@@ -239,6 +191,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ChangeId,DateChange,Cancel,Replacement,fkTimetable,fkEmployee")] ChangesTable changesTable)
         {
             if (id != changesTable.ChangeId)
@@ -266,44 +219,9 @@ namespace Diplomm.Controllers
                 }
                 return RedirectToAction("Index", "Home");
             }
-            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "EmployeesId", "EmployeesId", changesTable.fkEmployee);
+            ViewData["fkEmployee"] = new SelectList(_context.EmployeesTables, "Id", "EmployeesId", changesTable.fkEmployee);
             ViewData["fkTimetable"] = new SelectList(_context.TimetableTables, "TimetableID", "TimetableID", changesTable.fkTimetable);
             return View(changesTable);
-        }
-
-        // GET: ChangesTables/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var changesTable = await _context.ChangesTables
-                .Include(c => c.Employees)
-                .Include(c => c.Timetable)
-                .FirstOrDefaultAsync(m => m.ChangeId == id);
-            if (changesTable == null)
-            {
-                return NotFound();
-            }
-
-            return View(changesTable);
-        }
-
-        // POST: ChangesTables/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var changesTable = await _context.ChangesTables.FindAsync(id);
-            if (changesTable != null)
-            {
-                _context.ChangesTables.Remove(changesTable);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool ChangesTableExists(int id)

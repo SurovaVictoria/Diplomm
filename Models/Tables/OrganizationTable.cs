@@ -8,12 +8,12 @@ namespace Diplomm.Models.Tables
         [Key]
         public int ShopId { get; set; }
         /// <summary>
-        /// Название магазина
+        /// Группа
         /// </summary>
         [DisplayName("Группа")]
         public string? ShopName { get; set; }
         /// <summary>
-        /// Адрес магазина
+        /// Специальность
         /// </summary>
         [DisplayName("Специальность")]
         public string? Address { get; set; }

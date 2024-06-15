@@ -7,48 +7,34 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Diplomm.Data;
 using Diplomm.Models.Tables;
+using Microsoft.AspNetCore.Identity;
+using Diplomm.Areas.Account.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Diplomm.Controllers
 {
     public class EmployeesTablesController : Controller
     {
+        private readonly UserManager<EmployeesTable> _userManager;
+        private readonly SignInManager<EmployeesTable> _signInManager;
         private readonly AppDbContext _context;
 
-        public EmployeesTablesController(AppDbContext context)
+        public EmployeesTablesController(UserManager<EmployeesTable> userManager, AppDbContext context)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: EmployeesTables
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.EmployeesTables.Include(e => e.Posts);
-            return View(await appDbContext.ToListAsync());
-        }
-
-        // GET: EmployeesTables/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employeesTable = await _context.EmployeesTables
-                .Include(e => e.Posts)
-                .FirstOrDefaultAsync(m => m.EmployeesId == id);
-            if (employeesTable == null)
-            {
-                return NotFound();
-            }
-
-            return View(employeesTable);
+            return View(await _context.EmployeesTables.ToListAsync());
         }
 
         // GET: EmployeesTables/Create
         public IActionResult Create()
         {
-            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostName");
             return View();
         }
 
@@ -57,16 +43,22 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeesId,Name,Surname,Patronymic,Email,fkPost")] EmployeesTable employeesTable)
+        public async Task<IActionResult> Create(RegisterModel model)
         {
-            if (ModelState.IsValid)
+            var user = model.GetUser();
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
             {
-                _context.Add(employeesTable);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostName", employeesTable.fkPost);
-            return View(employeesTable);
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View();
+            }
         }
 
         // GET: EmployeesTables/Edit/5
@@ -82,7 +74,6 @@ namespace Diplomm.Controllers
             {
                 return NotFound();
             }
-            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostName", employeesTable.fkPost);
             return View(employeesTable);
         }
 
@@ -91,9 +82,9 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeesId,Name,Surname,Patronymic,Email,fkPost")] EmployeesTable employeesTable)
+        public async Task<IActionResult> Edit(int id, [Bind("EmployeesId,Name,Surname,Patronymic,UserName,Password")] EmployeesTable employeesTable)
         {
-            if (id != employeesTable.EmployeesId)
+            if (id != employeesTable.Id)
             {
                 return NotFound();
             }
@@ -107,7 +98,7 @@ namespace Diplomm.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeesTableExists(employeesTable.EmployeesId))
+                    if (!EmployeesTableExists(employeesTable.Id))
                     {
                         return NotFound();
                     }
@@ -118,11 +109,9 @@ namespace Diplomm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["fkPost"] = new SelectList(_context.Posts, "PostId", "PostName", employeesTable.fkPost);
             return View(employeesTable);
         }
 
-        // GET: EmployeesTables/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,8 +120,7 @@ namespace Diplomm.Controllers
             }
 
             var employeesTable = await _context.EmployeesTables
-                .Include(e => e.Posts)
-                .FirstOrDefaultAsync(m => m.EmployeesId == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (employeesTable == null)
             {
                 return NotFound();
@@ -140,25 +128,38 @@ namespace Diplomm.Controllers
 
             return View(employeesTable);
         }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var employeesTable = await _context.EmployeesTables.FindAsync(id);
+        //    if (employeesTable != null)
+        //    {
+        //        _context.EmployeesTables.Remove(employeesTable);
+        //    }
 
-        // POST: EmployeesTables/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+
+        // GET: EmployeesTables/Delete/5
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
         {
-            var employeesTable = await _context.EmployeesTables.FindAsync(id);
-            if (employeesTable != null)
+            EmployeesTable user = await _userManager.FindByIdAsync(id);
+            if (user != null)
             {
-                _context.EmployeesTables.Remove(employeesTable);
+                IdentityResult result = await _userManager.DeleteAsync(user);
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
+
 
         private bool EmployeesTableExists(int id)
         {
-            return _context.EmployeesTables.Any(e => e.EmployeesId == id);
+            return _context.EmployeesTables.Any(e => e.Id == id);
         }
     }
 }

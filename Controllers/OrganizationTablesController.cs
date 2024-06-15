@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Diplomm.Data;
 using Diplomm.Models.Tables;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Diplomm.Controllers
 {
@@ -20,30 +21,14 @@ namespace Diplomm.Controllers
         }
 
         // GET: OrganizationTables
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.OrganizationTables.ToListAsync());
         }
 
-        // GET: OrganizationTables/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var organizationTable = await _context.OrganizationTables
-                .FirstOrDefaultAsync(m => m.ShopId == id);
-            if (organizationTable == null)
-            {
-                return NotFound();
-            }
-
-            return View(organizationTable);
-        }
-
         // GET: OrganizationTables/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +39,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ShopId,ShopName,Address")] OrganizationTable organizationTable)
         {
             if (ModelState.IsValid)
@@ -66,6 +52,7 @@ namespace Diplomm.Controllers
         }
 
         // GET: OrganizationTables/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +73,7 @@ namespace Diplomm.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ShopId,ShopName,Address")] OrganizationTable organizationTable)
         {
             if (id != organizationTable.ShopId)
@@ -117,6 +105,7 @@ namespace Diplomm.Controllers
         }
 
         // GET: OrganizationTables/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +126,7 @@ namespace Diplomm.Controllers
         // POST: OrganizationTables/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var organizationTable = await _context.OrganizationTables.FindAsync(id);

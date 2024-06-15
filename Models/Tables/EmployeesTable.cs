@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Diplomm.Models.Tables
 {
-    public class EmployeesTable
+    public class EmployeesTable : IdentityUser<int>
     {
         [Key]
         public int EmployeesId { get; set; }
@@ -23,11 +23,5 @@ namespace Diplomm.Models.Tables
                 return string.Format("{0} {1} {2}", Name, Patronymic, Surname);
             }
         }
-        [DisplayName("Электронная почта")]
-        [EmailAddress]
-        public string? Email { get; set; }
-        public int? fkPost { get; set; }
-        [ForeignKey("fkPost")]
-        public Post? Posts { get; set; }
     }
 }

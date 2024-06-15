@@ -1,4 +1,3 @@
-using Diplomm.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -12,6 +11,8 @@ using Diplomm.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
+using Diplomm.Models.Tables;
+using Diplomm.Areas.Account.Models;
 
 internal partial class Program
 {
@@ -21,16 +22,19 @@ internal partial class Program
 
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         // Add services to the container.
-        builder.Services.AddControllersWithViews();
-        //builder.Services.AddDbContext<MyDbContext>();
+        builder.Services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation();
         builder.Services.AddDbContext<AppDbContext>(
             options => options.UseSqlServer(connectionString)
             );
-        builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders()
-            .AddDefaultUI();
-
+        builder.Services.AddDefaultIdentity<EmployeesTable>()
+            .AddRoles<ApplicationRole>()
+            .AddEntityFrameworkStores<AppDbContext>();
+      
+        builder.Services.ConfigureApplicationCookie(opts =>
+            {
+                opts.LoginPath = "/account/signin";
+            });
         var app = builder.Build();
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -59,4 +63,3 @@ internal partial class Program
         app.Run();
     }
 }
-

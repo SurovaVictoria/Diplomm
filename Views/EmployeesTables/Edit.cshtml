@@ -4,13 +4,14 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Изменить данные о сотруднике</h1>
+<h1>Edit</h1>
+
+<h4>EmployeesTable</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="EmployeesId" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -27,24 +28,20 @@
                 <span asp-validation-for="Patronymic" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="UserName" class="control-label">Логин</label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
+           
             <div class="form-group">
-                <label asp-for="fkPost" class="control-label"></label>
-                <select asp-for="fkPost" class="form-control" asp-items="ViewBag.fkPost"></select>
-                <span asp-validation-for="fkPost" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Сохранить" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a class="bi bi-arrow-left-square" asp-action="Index">Вернуться</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

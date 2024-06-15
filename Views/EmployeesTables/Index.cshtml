@@ -3,31 +3,28 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Сотрудники</h1>
-
-<p>
-    <a class="bi bi-plus-square" asp-action="Create"></a>
-</p>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+    <a asp-action="Create">Добавить сотрудника</a>
+</p> }
 <table class="table">
     <thead>
         <tr>
+
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Имя
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Surname)
+                Фамилия
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patronymic)
+                Отчество
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                Логин
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts)
-            </th>
-            <th></th>
+           
         </tr>
     </thead>
     <tbody>
@@ -43,16 +40,17 @@
                 @Html.DisplayFor(modelItem => item.Patronymic)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                @Html.DisplayFor(modelItem => item.UserName)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Posts.PostName)
-            </td>
-            <td>
-                <a class="bi bi-pencil-square" asp-action="Edit" asp-route-id="@item.EmployeesId"></a> |
-               @*  <a asp-action="Details" asp-route-id="@item.EmployeesId">Details</a> | *@
-                <a class="bi bi-trash" asp-action="Delete" asp-route-id="@item.EmployeesId"></a>
-            </td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <form asp-controller="EmployeesTables" asp-action="Delete" asp-route-id="@item.Id" method="post">
+                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                </form>
+
+
+            </td> }
         </tr>
 }
     </tbody>

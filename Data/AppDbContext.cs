@@ -1,4 +1,5 @@
-﻿using Diplomm.Models;
+﻿using Diplomm.Areas.Account.Models;
+using Diplomm.Models;
 using Diplomm.Models.Tables;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Diplomm.Data
 {
-    public class AppDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+    public class AppDbContext : IdentityDbContext<EmployeesTable, ApplicationRole, int>
     {
         public AppDbContext()
         {
@@ -22,7 +23,7 @@ namespace Diplomm.Data
         public DbSet<ChangesTable> ChangesTables => Set<ChangesTable>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=mon;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=dipl;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=true");
         }
     }
 
